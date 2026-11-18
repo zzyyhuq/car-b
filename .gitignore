@@ -1,0 +1,31 @@
+# Java / Maven
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/timing.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.iws
+
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn-error.log*
+
+# 小程序
+miniprogram_npm/
+project.private.config.json
+
+# 本地配置
+*.local
+application-local.yml
+.env
+
+# 系统
+.DS_Store
+Thumbs.db
