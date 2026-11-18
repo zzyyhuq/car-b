@@ -1,0 +1,160 @@
+.hero {
+  padding: 40rpx 32rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #0f3d78, #1677ff 60%, #47b0ff);
+  color: #ffffff;
+  box-shadow: 0 16rpx 36rpx rgba(22, 119, 255, 0.28);
+}
+
+.hero-tag {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 22rpx;
+}
+
+.hero-title {
+  margin-top: 20rpx;
+  font-size: 44rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.hero-desc {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  margin-top: 24rpx;
+  padding: 20rpx 24rpx;
+}
+
+.notice-label {
+  flex-shrink: 0;
+  padding: 4rpx 14rpx;
+  margin-right: 20rpx;
+  border-radius: 8rpx;
+  background: #eaf2ff;
+  color: #1677ff;
+  font-size: 22rpx;
+}
+
+.notice-swiper {
+  flex: 1;
+  height: 40rpx;
+}
+
+.notice-text {
+  font-size: 24rpx;
+  color: #4a5568;
+  line-height: 40rpx;
+}
+
+.activity-scroll {
+  margin-top: 24rpx;
+  white-space: nowrap;
+}
+
+.activity-card {
+  display: inline-block;
+  width: 420rpx;
+  margin-right: 20rpx;
+  padding: 28rpx;
+  border-radius: 24rpx;
+  color: #ffffff;
+  vertical-align: top;
+}
+
+.activity-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.activity-desc {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  opacity: 0.85;
+}
+
+.service-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding: 24rpx;
+}
+
+.service-emoji {
+  width: 96rpx;
+  height: 96rpx;
+  flex-shrink: 0;
+  border-radius: 24rpx;
+  background: #eef4ff;
+  font-size: 48rpx;
+  line-height: 96rpx;
+  text-align: center;
+}
+
+.service-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+
+.service-line {
+  display: flex;
+  align-items: center;
+}
+
+.service-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.service-tag {
+  margin-left: 12rpx;
+  padding: 2rpx 10rpx;
+  border-radius: 6rpx;
+  background: #fff1e8;
+  color: #ff6b35;
+  font-size: 20rpx;
+}
+
+.service-brief {
+  margin-top: 6rpx;
+  color: #8a94a6;
+  font-size: 24rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.service-meta {
+  display: flex;
+  align-items: baseline;
+  margin-top: 10rpx;
+}
+
+.service-meta .muted {
+  margin-left: 16rpx;
+}
+
+.order-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24rpx;
+  padding: 28rpx;
+}
+
+.entry-title {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.entry-sub {
+  margin-top: 6rpx;
+}

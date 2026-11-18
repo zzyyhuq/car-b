@@ -1,0 +1,145 @@
+.profile {
+  display: flex;
+  align-items: center;
+  padding: 32rpx;
+}
+
+.avatar {
+  width: 108rpx;
+  height: 108rpx;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #eef4ff;
+  font-size: 56rpx;
+  line-height: 108rpx;
+  text-align: center;
+}
+
+.profile-info {
+  flex: 1;
+  margin-left: 24rpx;
+}
+
+.profile-name {
+  font-size: 34rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.points-box {
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  background: linear-gradient(135deg, #fff4e5, #ffe8d0);
+  text-align: center;
+}
+
+.points-num {
+  color: #ff6b35;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.points-label {
+  color: #c47a4e;
+  font-size: 20rpx;
+}
+
+.stat-row {
+  display: flex;
+  margin-top: 24rpx;
+  padding: 28rpx 0;
+}
+
+.stat {
+  flex: 1;
+  text-align: center;
+}
+
+.stat + .stat {
+  border-left: 2rpx solid #f0f2f6;
+}
+
+.stat-num {
+  font-size: 36rpx;
+  font-weight: 700;
+  margin-bottom: 6rpx;
+}
+
+.car-card {
+  margin-bottom: 16rpx;
+  padding: 24rpx 28rpx;
+}
+
+.car-plate {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+  letter-spacing: 2rpx;
+}
+
+.empty-btn {
+  display: inline-block;
+  margin-top: 24rpx;
+  padding: 14rpx 40rpx;
+  border-radius: 999rpx;
+  background: #1677ff;
+  color: #ffffff;
+  font-size: 26rpx;
+}
+
+.order-card {
+  margin-bottom: 16rpx;
+  padding: 26rpx 28rpx;
+}
+
+.order-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.order-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.status {
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  background: #eaf2ff;
+  color: #1677ff;
+  font-size: 22rpx;
+}
+
+.order-line {
+  color: #6b7688;
+  font-size: 24rpx;
+  line-height: 1.8;
+}
+
+.order-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12rpx;
+  padding-top: 12rpx;
+  border-top: 2rpx solid #f3f5f8;
+}
+
+.menu {
+  margin-top: 32rpx;
+  padding: 0 28rpx;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 0;
+  font-size: 28rpx;
+}
+
+.menu-item + .menu-item {
+  border-top: 2rpx solid #f3f5f8;
+}

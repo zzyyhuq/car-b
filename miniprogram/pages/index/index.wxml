@@ -1,0 +1,52 @@
+<view class="page">
+  <view class="hero">
+    <view class="hero-tag">4S 店直营 · 专业汽车美容</view>
+    <view class="hero-title">星辰汽车美容中心</view>
+    <view class="hero-desc">洗护 · 内饰 · 漆面养护，预约到店免排队</view>
+  </view>
+
+  <view class="notice card">
+    <text class="notice-label">公告</text>
+    <swiper class="notice-swiper" vertical autoplay circular interval="3000">
+      <swiper-item wx:for="{{notices}}" wx:key="*this">
+        <text class="notice-text">{{item}}</text>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <scroll-view class="activity-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="activity-card" wx:for="{{activities}}" wx:key="id" style="background: {{item.bg}}">
+      <view class="activity-title">{{item.title}}</view>
+      <view class="activity-desc">{{item.desc}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="section-head">
+    <text class="section-title">热门服务</text>
+    <text class="section-more" bindtap="goServiceList">全部 ›</text>
+  </view>
+
+  <view class="service-card card" wx:for="{{recommends}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+    <view class="service-emoji">{{item.emoji}}</view>
+    <view class="service-info">
+      <view class="service-line">
+        <text class="service-name">{{item.name}}</text>
+        <text class="service-tag">{{item.tag}}</text>
+      </view>
+      <view class="service-brief">{{item.brief}}</view>
+      <view class="service-meta">
+        <text class="price">¥{{item.price}}</text>
+        <text class="muted">约 {{item.duration}} 分钟</text>
+      </view>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+
+  <view class="order-entry card" bindtap="goMine">
+    <view>
+      <view class="entry-title">我的预约</view>
+      <view class="entry-sub muted">查看订单状态与服务进度</view>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+</view>

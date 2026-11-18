@@ -1,0 +1,70 @@
+/* 全局样式：颜色、卡片、价格、按钮统一在这里，页面里少写重复代码 */
+page {
+  background: #f5f7fb;
+  color: #1b2537;
+  font-size: 28rpx;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+.page {
+  padding: 24rpx 24rpx 80rpx;
+  box-sizing: border-box;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  box-shadow: 0 8rpx 24rpx rgba(23, 43, 77, 0.06);
+}
+
+.muted {
+  color: #8a94a6;
+  font-size: 24rpx;
+}
+
+.price {
+  color: #ff6b35;
+  font-weight: 600;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 40rpx 8rpx 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: #1677ff;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1677ff, #3aa0ff);
+  color: #ffffff;
+  border-radius: 999rpx;
+  text-align: center;
+}
+
+.arrow {
+  color: #c2c9d6;
+  font-size: 36rpx;
+}
+
+.empty {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #8a94a6;
+  font-size: 26rpx;
+}
+
+.empty-icon {
+  font-size: 64rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}

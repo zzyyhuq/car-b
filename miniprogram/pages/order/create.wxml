@@ -1,0 +1,71 @@
+<view class="page create-page">
+  <view class="block card">
+    <view class="block-title">服务项目</view>
+    <view class="service-row">
+      <text class="service-emoji">{{service.emoji}}</text>
+      <view class="service-info">
+        <view class="service-name">{{service.name}}</view>
+        <view class="muted">约 {{service.duration}} 分钟 · 积分 x{{service.pointsRate}}</view>
+      </view>
+      <text class="price">¥{{service.price}}</text>
+    </view>
+  </view>
+
+  <view class="block card">
+    <view class="block-title">选择车辆</view>
+    <view
+      class="car-item {{carId === item.id ? 'active' : ''}}"
+      wx:for="{{cars}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="chooseCar"
+    >
+      <view class="car-radio">
+        <view class="car-dot"></view>
+      </view>
+      <view class="car-info">
+        <view class="car-plate">{{item.plateNo}}</view>
+        <view class="muted">{{item.brand}} {{item.model}} · {{item.color}}</view>
+      </view>
+    </view>
+    <view class="add-car" bindtap="addCar">＋ 添加车辆</view>
+  </view>
+
+  <view class="block card">
+    <view class="block-title">预约时间</view>
+    <picker mode="date" start="{{minDate}}" value="{{date}}" bindchange="onDateChange">
+      <view class="date-picker">
+        <text>📅 {{date}}</text>
+        <text class="muted">修改 ›</text>
+      </view>
+    </picker>
+    <view class="time-grid">
+      <view
+        class="time-item {{time === item ? 'active' : ''}}"
+        wx:for="{{timeSlots}}"
+        wx:key="*this"
+        data-value="{{item}}"
+        bindtap="chooseTime"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <view class="block card">
+    <view class="block-title">备注（选填）</view>
+    <textarea
+      class="remark"
+      placeholder="例如：车内有宠物，请轻拿轻放"
+      maxlength="100"
+      value="{{remark}}"
+      bindinput="onRemark"
+    />
+  </view>
+
+  <view class="submit-bar">
+    <view class="bottom-price">
+      <text class="muted">合计</text>
+      <text class="price total">¥{{service.price}}</text>
+    </view>
+    <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submit">提交预约</view>
+  </view>
+</view>

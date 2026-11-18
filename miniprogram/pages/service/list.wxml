@@ -1,0 +1,37 @@
+<view class="page">
+  <view class="search card">
+    <text class="search-icon">🔍</text>
+    <input class="search-input" placeholder="搜索服务项目" value="{{keyword}}" bindinput="onSearch" />
+  </view>
+
+  <scroll-view class="category-bar" scroll-x enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{categories}}"
+      wx:key="*this"
+      class="category-item {{activeCategory === item ? 'active' : ''}}"
+      data-value="{{item}}"
+      bindtap="switchCategory"
+    >{{item}}</view>
+  </scroll-view>
+
+  <view class="service-card card" wx:for="{{filtered}}" wx:key="id">
+    <view class="service-emoji" bindtap="goDetail" data-id="{{item.id}}">{{item.emoji}}</view>
+    <view class="service-info" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="service-line">
+        <text class="service-name">{{item.name}}</text>
+        <text class="service-tag">{{item.tag}}</text>
+      </view>
+      <view class="service-brief">{{item.brief}}</view>
+      <view class="service-meta">
+        <text class="price">¥{{item.price}}</text>
+        <text class="muted">约 {{item.duration}} 分钟</text>
+      </view>
+    </view>
+    <view class="book-btn" catchtap="goBook" data-id="{{item.id}}">预约</view>
+  </view>
+
+  <view class="empty" wx:if="{{filtered.length === 0}}">
+    <text class="empty-icon">🪄</text>
+    <view>没有找到相关服务</view>
+  </view>
+</view>

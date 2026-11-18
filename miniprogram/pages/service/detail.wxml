@@ -1,0 +1,44 @@
+<view class="detail-page" wx:if="{{service}}">
+  <view class="detail-hero">
+    <text class="detail-emoji">{{service.emoji}}</text>
+    <view class="detail-hero-name">{{service.name}}</view>
+    <view class="detail-hero-brief">{{service.brief}}</view>
+  </view>
+
+  <view class="detail-body">
+    <view class="block card">
+      <view class="price-row">
+        <text class="detail-price">¥{{service.price}}</text>
+        <text class="muted">约 {{service.duration}} 分钟</text>
+      </view>
+      <view class="chips">
+        <text class="chip">{{service.category}}</text>
+        <text class="chip">积分 x{{service.pointsRate}}</text>
+        <text class="chip">免费停车</text>
+      </view>
+    </view>
+
+    <view class="block card">
+      <view class="block-title">服务内容</view>
+      <view class="item" wx:for="{{service.items}}" wx:key="*this">
+        <text class="dot">•</text>
+        <text class="item-text">{{item}}</text>
+      </view>
+    </view>
+
+    <view class="block card">
+      <view class="block-title">预约须知</view>
+      <view class="tip">1. 请按预约时间到店，迟到 30 分钟以上需重新排队。</view>
+      <view class="tip">2. 订单完成后自动发放积分，可在积分商城兑换商品。</view>
+      <view class="tip">3. 如需取消，请提前 2 小时联系门店。</view>
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <view class="bottom-price">
+      <text class="muted">合计</text>
+      <text class="price total">¥{{service.price}}</text>
+    </view>
+    <view class="book-now" bindtap="book">立即预约</view>
+  </view>
+</view>
