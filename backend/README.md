@@ -41,6 +41,11 @@ cd backend
 
 ## 三、接口（阶段 2）
 
+**在线接口文档（推荐）：** 启动后浏览器打开 <http://localhost:8081/swagger-ui.html>，
+所有接口按模块分组，可以直接点「Try it out」调试。先调登录接口拿到 `data.token`，
+点右上角 **Authorize** 粘贴 token（不用自己加 `Bearer ` 前缀），之后的请求会自动带上。
+JSON 文档地址：<http://localhost:8081/v3/api-docs>。
+
 | 方法 | 路径 | 权限 | 说明 |
 |---|---|---|---|
 | POST | `/api/auth/login` | 公开 | 账号密码登录，返回 JWT |

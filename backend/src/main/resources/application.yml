@@ -30,6 +30,16 @@ mybatis-plus:
     db-config:
       id-type: auto
 
+# 接口文档：http://localhost:8081/swagger-ui.html
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+    # 刷新页面后 Authorize 里填的 token 不丢
+    persist-authorization: true
+
 jwt:
   # 至少 32 字节，正式上线一定要改
   secret: car-beauty-graduation-project-jwt-secret-key-2026-change-me-in-production
