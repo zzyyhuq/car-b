@@ -12,12 +12,14 @@ import com.example.beauty.module.user.entity.SysUser;
 import com.example.beauty.module.user.mapper.SysUserMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -46,14 +48,19 @@ public class AuthServiceImpl implements AuthService {
     public LoginVO login(LoginDTO dto) {
         SysUser user = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUsername, dto.getUsername()));
-        // 账号不存在和密码错误返回同一句话，别给攻击者送信息
+        // 账号不存在和密码错误返回同一句话，别给攻击者送信息；
+        // 服务端日志里记录具体原因，方便排查（不记录密码）
         if (user == null || !StringUtils.hasText(user.getPassword())
                 || !passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+            log.warn("登录失败 username={} reason={}", dto.getUsername(),
+                    user == null ? "账号不存在" : "密码错误");
             throw new BusinessException(400, "账号或密码错误");
         }
         if (user.getStatus() != null && user.getStatus() == 0) {
+            log.warn("登录失败 username={} reason=账号已禁用", dto.getUsername());
             throw new BusinessException(403, "账号已被禁用，请联系管理员");
         }
+        log.info("登录成功 userId={} username={} role={}", user.getId(), user.getUsername(), user.getRole());
         return buildLoginVO(user);
     }
 
@@ -73,10 +80,13 @@ public class AuthServiceImpl implements AuthService {
             user.setPoints(0);
             user.setStatus(1);
             sysUserMapper.insert(user);
+            log.info("微信首次登录，自动建档 userId={}", user.getId());
         }
         if (user.getStatus() != null && user.getStatus() == 0) {
+            log.warn("微信登录失败 userId={} reason=账号已禁用", user.getId());
             throw new BusinessException(403, "账号已被禁用，请联系门店");
         }
+        log.info("微信登录成功 userId={}", user.getId());
         return buildLoginVO(user);
     }
 
@@ -108,6 +118,7 @@ public class AuthServiceImpl implements AuthService {
     private LoginVO buildLoginVO(SysUser user) {
         return LoginVO.builder()
                 .token(jwtUtil.generate(user.getId(), user.getRole()))
+                .expiresIn(jwtUtil.getExpireSeconds())
                 .id(user.getId())
                 .nickname(user.getNickname())
                 .avatar(user.getAvatar())

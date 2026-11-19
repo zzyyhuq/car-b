@@ -24,6 +24,11 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
+    /** token 有效期（秒），登录接口返回给前端，方便提前重新登录 */
+    public long getExpireSeconds() {
+        return Duration.ofDays(expireDays).getSeconds();
+    }
+
     public String generate(Long userId, String role) {
         Date now = new Date();
         Date expire = new Date(now.getTime() + Duration.ofDays(expireDays).toMillis());
