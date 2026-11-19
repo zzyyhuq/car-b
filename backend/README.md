@@ -54,6 +54,27 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/user/profile` | 已登录 | 修改昵称/手机号/头像 |
 | GET | `/api/user/page` | ADMIN | 用户分页列表（keyword/role/status 筛选） |
 | GET | `/api/user/{id}` | ADMIN | 用户详情 |
+| GET | `/api/service-type/page` | ADMIN | 服务项目分页（name/category/status 筛选） |
+| GET | `/api/service-type/list` | 登录 | 上架中的服务项目列表 |
+| GET | `/api/service-type/{id}` | 登录 | 服务项目详情 |
+| POST | `/api/service-type` | ADMIN | 新增服务项目 |
+| PUT | `/api/service-type/{id}` | ADMIN | 修改服务项目 |
+| PUT | `/api/service-type/{id}/status?status=1` | ADMIN | 上架/下架 |
+| DELETE | `/api/service-type/{id}` | ADMIN | 逻辑删除 |
+
+服务项目新增示例：
+
+```json
+{
+  "name": "轮毂深度清洁",
+  "category": "洗车",
+  "description": "去除轮毂铁粉与刹车粉尘",
+  "price": 88,
+  "duration": 45,
+  "pointsRate": 1.0,
+  "status": 1
+}
+```
 
 除 `/api/auth/**` 外，所有请求都要带请求头：
 
