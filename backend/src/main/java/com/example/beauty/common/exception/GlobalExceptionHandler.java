@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -54,9 +55,21 @@ public class GlobalExceptionHandler {
         return Result.fail(405, "请求方法不支持，请使用 " + e.getSupportedHttpMethods());
     }
 
+    /** Content-Type 不对，比如用表单格式提交 JSON 接口 */
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public Result<Void> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException e,
+                                                    HttpServletResponse response) {
+        log.warn("不支持的 Content-Type：{}", e.getContentType());
+        response.setStatus(415);
+        return Result.fail(415, "不支持的 Content-Type，请使用 application/json");
+    }
+
     /** 请求体不是合法 JSON、字段类型不对 */
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public Result<Void> handleNotReadable(HttpMessageNotReadableException e, HttpServletResponse response) {
+    public Result<Void> handleNotReadable(HttpMessageNotReadableException e, HttpServletRequest request,
+                                          HttpServletResponse response) {
+        log.warn("请求体解析失败：{} {} - {}", request.getMethod(), request.getRequestURI(),
+                e.getMostSpecificCause().getMessage());
         response.setStatus(400);
         return Result.fail(400, "请求体格式错误，请检查 JSON 是否正确");
     }

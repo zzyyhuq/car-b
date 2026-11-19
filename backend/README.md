@@ -38,6 +38,7 @@ cd backend
 | owner001 | owner123 | 车主 |
 
 > 演示账号写死在 `common/config/DataInitializer.java`，答辩前记得改掉。
+> 首次启动还会给 owner001 建一辆演示车辆：`苏A12345`（比亚迪 汉），否则订单没法关联车辆。
 
 ## 三、接口（阶段 2）
 
@@ -61,6 +62,14 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/service-type/{id}` | ADMIN | 修改服务项目 |
 | PUT | `/api/service-type/{id}/status?status=1` | ADMIN | 上架/下架 |
 | DELETE | `/api/service-type/{id}` | ADMIN | 逻辑删除 |
+| POST | `/api/order` | OWNER | 车主预约下单 |
+| POST | `/api/order/admin-create` | ADMIN/STAFF | 到店开单（替车主建单） |
+| GET | `/api/order/my` | OWNER | 我的订单（可按 status 筛选） |
+| GET | `/api/order/page` | ADMIN/STAFF | 订单分页（订单号/状态/车牌/员工/日期） |
+| GET | `/api/order/{id}` | 登录 | 订单详情（车主只能看自己的） |
+| PUT | `/api/order/{id}/assign` | ADMIN | 派单给员工 |
+| PUT | `/api/order/{id}/cancel` | 登录 | 取消订单（车主只能取消自己的，限待接单/已接单） |
+| PUT | `/api/order/{id}/status` | ADMIN/STAFF | 状态流转（取消走取消接口） |
 
 服务项目新增示例：
 
@@ -75,6 +84,24 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
   "status": 1
 }
 ```
+
+订单状态与请求示例：
+
+```
+PENDING 待接单 → ACCEPTED 已接单 → IN_PROGRESS 服务中 → COMPLETED 已完成 → EVALUATED 已评价
+PENDING / ACCEPTED 可以取消（CANCELLED）
+```
+
+```json
+{
+  "carId": 1,
+  "serviceTypeId": 1,
+  "appointmentTime": "2026-11-22T10:00:00",
+  "remark": "第一次体验"
+}
+```
+
+时间字段使用 ISO-8601 格式（`yyyy-MM-ddTHH:mm:ss`），金额由后端按服务项目价格计算，前端传的价格不生效。
 
 除 `/api/auth/**` 外，所有请求都要带请求头：
 
