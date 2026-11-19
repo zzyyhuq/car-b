@@ -23,8 +23,9 @@ spring:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-    # 开发期打印 SQL，答辩前可以关掉
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    # SQL 走 SLF4J：开发环境（logback-spring.xml 的 !prod）自动打开 DEBUG 打印，
+    # 生产环境 INFO 级别自动静默，不用改代码
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
   global-config:
     banner: false
     db-config:

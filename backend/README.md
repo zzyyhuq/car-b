@@ -83,6 +83,7 @@ Authorization: Bearer <token>
 ```
 
 响应统一为 `{ code, message, data }`，`code = 200` 表示成功。
+出错时 HTTP 状态码与 `code` 一致（例如 401 / 403 / 404 / 400），前端和日志系统都可以直接按状态码判断。
 
 ## 四、Postman 验收步骤
 
@@ -105,3 +106,10 @@ Authorization: Bearer <token>
 - JWT 密钥 `jwt.secret` 至少 32 字节，上线前必须换。
 - 微信登录的 `wx.appid` / `wx.secret` 在阶段 3 填，也可以用环境变量 `WX_APPID` / `WX_SECRET`。
 - Redis 已引入依赖和配置，阶段 4 做登录态/缓存时启用，现在不启动 Redis 也不影响运行。
+
+## 六、日志
+
+- 开发环境（默认）：输出到控制台，`com.example.beauty` 为 DEBUG，能看到 MyBatis SQL。
+- 生产环境：启动加 `--spring.profiles.active=prod`，同时写入 `logs/beauty.log`（按天 + 50MB 滚动，保留 30 天，压缩归档），SQL 不再打印。
+- 每个请求自动生成 8 位 `traceId`，日志里显示为 `[traceId]`，同时通过响应头 `X-Trace-Id` 返回，排查问题时可把同一次请求的日志筛出来。
+- 访问日志只记录 `/api/**` 的方法、路径、耗时、用户、IP，不记录请求体和 token。

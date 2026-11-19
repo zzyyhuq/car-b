@@ -33,7 +33,8 @@ public class DataInitializer implements ApplicationRunner {
         create("admin", "admin123", "系统管理员", Role.ADMIN);
         create("staff001", "staff123", "门店员工小李", Role.STAFF);
         create("owner001", "owner123", "车主小明", Role.OWNER);
-        log.info("已初始化演示账号：admin/admin123、staff001/staff123、owner001/owner123");
+        // 日志里不出现明文密码，账号对应密码见 backend/README.md
+        log.info("已初始化 3 个演示账号：admin、staff001、owner001");
     }
 
     private void create(String username, String rawPassword, String nickname, String role) {
