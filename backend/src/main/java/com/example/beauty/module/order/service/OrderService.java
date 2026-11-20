@@ -29,4 +29,7 @@ public interface OrderService {
 
     /** 按状态机流转，取消不在这里处理 */
     void updateStatus(Long id, String status);
+
+    /** 车辆是否已被订单引用（车主删车前检查） */
+    boolean hasOrderByCar(Long carId);
 }

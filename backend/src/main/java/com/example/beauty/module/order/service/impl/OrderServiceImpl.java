@@ -213,6 +213,12 @@ public class OrderServiceImpl implements OrderService {
                 order.getOrderNo(), order.getStatus(), status, UserContext.getId());
     }
 
+    @Override
+    public boolean hasOrderByCar(Long carId) {
+        return orderMapper.selectCount(new LambdaQueryWrapper<ServiceOrder>()
+                .eq(ServiceOrder::getCarId, carId)) > 0;
+    }
+
     private ServiceOrder buildOrder(Long userId, Car car, ServiceType serviceType,
                                     LocalDateTime appointmentTime, String remark) {
         ServiceOrder order = new ServiceOrder();

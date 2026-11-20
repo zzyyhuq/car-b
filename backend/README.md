@@ -70,6 +70,11 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/order/{id}/assign` | ADMIN | 派单给员工 |
 | PUT | `/api/order/{id}/cancel` | 登录 | 取消订单（车主只能取消自己的，限待接单/已接单） |
 | PUT | `/api/order/{id}/status` | ADMIN/STAFF | 状态流转（取消走取消接口） |
+| GET | `/api/car/my` | OWNER | 我的车辆 |
+| GET | `/api/car/user/{userId}` | ADMIN/STAFF | 指定车主的车辆（到店开单用） |
+| POST | `/api/car` | OWNER | 新增车辆 |
+| PUT | `/api/car/{id}` | OWNER | 修改车辆（只能改自己的） |
+| DELETE | `/api/car/{id}` | OWNER | 删除车辆（已有订单的不能删） |
 
 服务项目新增示例：
 
