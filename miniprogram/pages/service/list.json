@@ -1,3 +1,5 @@
 {
-  "navigationBarTitleText": "服务项目"
+  "navigationBarTitleText": "服务项目",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }
