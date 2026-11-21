@@ -1,25 +1,5 @@
 const { get } = require('../../utils/request')
-
-const CATEGORY_EMOJI = {
-  洗车: '🚿',
-  内饰: '✨',
-  漆面: '💎',
-  保养: '🔧'
-}
-
-function formatPrice(value) {
-  const price = Number(value || 0)
-  return Number.isInteger(price) ? price : price.toFixed(2)
-}
-
-/** 后端没有 tag 字段，按积分倍率推导一个展示标签 */
-function tagOf(pointsRate) {
-  const rate = Number(pointsRate || 0)
-  if (rate >= 2) return '尊享'
-  if (rate >= 1.5) return '推荐'
-  if (rate >= 1.2) return '性价比'
-  return ''
-}
+const { toServiceView } = require('../../utils/service')
 
 Page({
   data: {
@@ -41,17 +21,7 @@ Page({
   loadServices() {
     return get('/api/service-type/list', {}, { loading: true })
       .then(list => {
-        const services = (list || []).map(item => ({
-          id: item.id,
-          name: item.name,
-          category: item.category || '其他',
-          price: formatPrice(item.price),
-          duration: item.duration,
-          pointsRate: item.pointsRate,
-          emoji: CATEGORY_EMOJI[item.category] || '🚗',
-          tag: tagOf(item.pointsRate),
-          brief: item.description || ''
-        }))
+        const services = (list || []).map(item => toServiceView(item))
         const categories = ['全部'].concat(
           services.map(item => item.category).filter((value, index, arr) => arr.indexOf(value) === index)
         )

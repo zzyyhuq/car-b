@@ -18,7 +18,7 @@
       </view>
     </view>
 
-    <view class="block card">
+    <view class="block card" wx:if="{{service.items.length}}">
       <view class="block-title">服务内容</view>
       <view class="item" wx:for="{{service.items}}" wx:key="*this">
         <text class="dot">•</text>
@@ -41,4 +41,9 @@
     </view>
     <view class="book-now" bindtap="book">立即预约</view>
   </view>
+</view>
+
+<view class="empty" wx:if="{{!loading && !service}}">
+  <text class="empty-icon">🪄</text>
+  <view>服务项目不存在或已下架</view>
 </view>
