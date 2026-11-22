@@ -5,7 +5,7 @@
     <view class="hero-desc">洗护 · 内饰 · 漆面养护，预约到店免排队</view>
   </view>
 
-  <view class="notice card">
+  <view class="notice card" wx:if="{{notices.length}}">
     <text class="notice-label">公告</text>
     <swiper class="notice-swiper" vertical autoplay circular interval="3000">
       <swiper-item wx:for="{{notices}}" wx:key="*this">
@@ -14,7 +14,7 @@
     </swiper>
   </view>
 
-  <scroll-view class="activity-scroll" scroll-x enhanced show-scrollbar="{{false}}">
+  <scroll-view class="activity-scroll" wx:if="{{activities.length}}" scroll-x enhanced show-scrollbar="{{false}}">
     <view class="activity-card" wx:for="{{activities}}" wx:key="id" style="background: {{item.bg}}">
       <view class="activity-title">{{item.title}}</view>
       <view class="activity-desc">{{item.desc}}</view>
@@ -25,6 +25,8 @@
     <text class="section-title">热门服务</text>
     <text class="section-more" bindtap="goServiceList">全部 ›</text>
   </view>
+
+  <view class="empty" wx:if="{{!recommends.length}}">暂无服务项目</view>
 
   <view class="service-card card" wx:for="{{recommends}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
     <view class="service-emoji">{{item.emoji}}</view>

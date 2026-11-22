@@ -38,7 +38,8 @@ cd backend
 | owner001 | owner123 | 车主 |
 
 > 演示账号写死在 `common/config/DataInitializer.java`，答辩前记得改掉。
-> 首次启动还会给 owner001 建一辆演示车辆：`苏A12345`（比亚迪 汉），否则订单没法关联车辆。
+> 首次启动还会给 owner001 建一辆演示车辆：`苏A12345`（比亚迪 汉），否则订单没法关联车辆；
+> 同时初始化 3 条演示公告和 2 个演示活动，保证小程序首页有内容。
 
 ## 三、接口（阶段 2）
 
@@ -62,6 +63,8 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/service-type/{id}` | ADMIN | 修改服务项目 |
 | PUT | `/api/service-type/{id}/status?status=1` | ADMIN | 上架/下架 |
 | DELETE | `/api/service-type/{id}` | ADMIN | 逻辑删除 |
+| GET | `/api/notice/list` | 登录 | 已发布公告列表（limit 默认 5、最大 20） |
+| GET | `/api/activity/list` | 登录 | 进行中的活动列表（limit 默认 5、最大 20） |
 | POST | `/api/order` | OWNER | 车主预约下单 |
 | POST | `/api/order/admin-create` | ADMIN/STAFF | 到店开单（替车主建单） |
 | GET | `/api/order/my` | OWNER | 我的订单（可按 status 筛选） |
