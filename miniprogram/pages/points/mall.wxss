@@ -73,12 +73,23 @@
   font-weight: 600;
 }
 
+.goods-stock {
+  display: block;
+  margin-top: 4rpx;
+  color: #a3acbb;
+  font-size: 20rpx;
+}
+
 .exchange-btn {
   padding: 8rpx 22rpx;
   border-radius: 999rpx;
   background: #1677ff;
   color: #ffffff;
   font-size: 22rpx;
+}
+
+.exchange-btn.disabled {
+  opacity: 0.45;
 }
 
 .mall-tip {

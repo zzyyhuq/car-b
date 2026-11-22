@@ -165,6 +165,15 @@
   font-size: 40rpx;
 }
 
+.pay-hint {
+  margin-left: 14rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  background: #fff1e8;
+  color: #ff6b35;
+  font-size: 20rpx;
+}
+
 .submit-btn {
   padding: 20rpx 72rpx;
   border-radius: 999rpx;

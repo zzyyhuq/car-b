@@ -1,9 +1,12 @@
 <view class="page">
   <view class="profile card">
-    <view class="avatar">👤</view>
+    <view class="avatar">
+      <image wx:if="{{avatar}}" class="avatar-img" src="{{avatar}}" mode="aspectFill" />
+      <text wx:else>👤</text>
+    </view>
     <view class="profile-info">
-      <view class="profile-name">微信用户</view>
-      <view class="muted">车主 · 尾号 8888</view>
+      <view class="profile-name">{{nickname}}</view>
+      <view class="muted">{{subtitle}}</view>
     </view>
     <view class="points-box" bindtap="goMall">
       <view class="points-num">{{points}}</view>
@@ -52,7 +55,8 @@
       <text class="status">{{item.status}}</text>
     </view>
     <view class="order-line">{{item.carPlate}} · {{item.carName}}</view>
-    <view class="order-line">预约时间：{{item.date}} {{item.time}}</view>
+    <view class="order-line" wx:if="{{item.date}}">预约时间：{{item.date}} {{item.time}}</view>
+    <view class="order-line" wx:else>预约时间：到店确认</view>
     <view class="order-bottom">
       <text class="muted">单号 {{item.orderNo}}</text>
       <text class="price">¥{{item.price}}</text>

@@ -4,17 +4,26 @@
     <view class="mall-sub">当前积分 <text class="mall-points">{{points}}</text></view>
   </view>
 
-  <view class="goods-grid">
+  <view class="goods-grid" wx:if="{{goods.length}}">
     <view class="goods-card card" wx:for="{{goods}}" wx:key="id">
       <view class="goods-emoji">{{item.emoji}}</view>
       <view class="goods-name">{{item.name}}</view>
       <view class="goods-desc">{{item.desc}}</view>
       <view class="goods-bottom">
-        <text class="goods-points">{{item.points}} 积分</text>
-        <view class="exchange-btn" data-id="{{item.id}}" bindtap="exchange">兑换</view>
+        <view>
+          <text class="goods-points">{{item.points}} 积分</text>
+          <text class="goods-stock">剩 {{item.stock}}</text>
+        </view>
+        <view
+          class="exchange-btn {{item.stock <= 0 || points < item.points ? 'disabled' : ''}}"
+          data-id="{{item.id}}"
+          bindtap="exchange"
+        >兑换</view>
       </view>
     </view>
   </view>
 
-  <view class="mall-tip">积分兑换将在阶段 4 接入后端接口</view>
+  <view class="empty card" wx:else>暂无可兑换商品</view>
+
+  <view class="mall-tip">兑换后请到店出示兑换单核销</view>
 </view>

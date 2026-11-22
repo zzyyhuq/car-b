@@ -39,7 +39,8 @@ cd backend
 
 > 演示账号写死在 `common/config/DataInitializer.java`，答辩前记得改掉。
 > 首次启动还会给 owner001 建一辆演示车辆：`苏A12345`（比亚迪 汉），否则订单没法关联车辆；
-> 同时初始化 3 条演示公告和 2 个演示活动，保证小程序首页有内容。
+> 同时初始化 3 条演示公告、2 个演示活动、4 个积分商品，并给 owner001 发 500 演示积分，
+> 保证小程序首页和积分商城都能直接演示（表里已有数据则跳过）。
 
 ## 三、接口（阶段 2）
 
@@ -78,6 +79,10 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | POST | `/api/car` | OWNER | 新增车辆 |
 | PUT | `/api/car/{id}` | OWNER | 修改车辆（只能改自己的） |
 | DELETE | `/api/car/{id}` | OWNER | 删除车辆（已有订单的不能删） |
+| GET | `/api/points/goods/list` | 登录 | 上架中的积分商品 |
+| POST | `/api/points/exchange` | OWNER | 兑换积分商品（扣积分 + 扣库存 + 写流水） |
+| GET | `/api/points/exchange/my` | OWNER | 我的兑换记录 |
+| GET | `/api/points/record/my` | OWNER | 我的积分流水（limit 默认 50、最大 100） |
 
 服务项目新增示例：
 

@@ -8,6 +8,10 @@ import com.example.beauty.module.car.entity.Car;
 import com.example.beauty.module.car.mapper.CarMapper;
 import com.example.beauty.module.notice.entity.Notice;
 import com.example.beauty.module.notice.mapper.NoticeMapper;
+import com.example.beauty.module.points.entity.PointsGoods;
+import com.example.beauty.module.points.entity.PointsRecord;
+import com.example.beauty.module.points.mapper.PointsGoodsMapper;
+import com.example.beauty.module.points.mapper.PointsRecordMapper;
 import com.example.beauty.module.user.entity.SysUser;
 import com.example.beauty.module.user.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,17 +34,23 @@ public class DataInitializer implements ApplicationRunner {
     private final CarMapper carMapper;
     private final NoticeMapper noticeMapper;
     private final ActivityMapper activityMapper;
+    private final PointsGoodsMapper pointsGoodsMapper;
+    private final PointsRecordMapper pointsRecordMapper;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(SysUserMapper sysUserMapper,
                            CarMapper carMapper,
                            NoticeMapper noticeMapper,
                            ActivityMapper activityMapper,
+                           PointsGoodsMapper pointsGoodsMapper,
+                           PointsRecordMapper pointsRecordMapper,
                            PasswordEncoder passwordEncoder) {
         this.sysUserMapper = sysUserMapper;
         this.carMapper = carMapper;
         this.noticeMapper = noticeMapper;
         this.activityMapper = activityMapper;
+        this.pointsGoodsMapper = pointsGoodsMapper;
+        this.pointsRecordMapper = pointsRecordMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -56,6 +66,8 @@ public class DataInitializer implements ApplicationRunner {
         initDemoCar();
         initDemoNotices();
         initDemoActivities();
+        initDemoPointsGoods();
+        initDemoPoints();
     }
 
     /** 车主下单必须选车，没有车辆数据阶段 3 没法联调 */
@@ -125,6 +137,55 @@ public class DataInitializer implements ApplicationRunner {
         activity.setEndTime(endTime);
         activity.setStatus(1);
         return activity;
+    }
+
+    /** 积分商城演示商品 */
+    private void initDemoPointsGoods() {
+        if (pointsGoodsMapper.selectCount(null) > 0) {
+            return;
+        }
+        pointsGoodsMapper.insert(goods("免费精洗券", "凭券免费洗车一次", 300, 20));
+        pointsGoodsMapper.insert(goods("玻璃水一瓶", "冬季防冻型玻璃水", 120, 50));
+        pointsGoodsMapper.insert(goods("车内除味喷雾", "植物提取，清新除味", 200, 30));
+        pointsGoodsMapper.insert(goods("洗车毛巾套装", "超细纤维三件套", 150, 40));
+        log.info("已初始化 4 个演示积分商品");
+    }
+
+    private PointsGoods goods(String name, String description, int pointsPrice, int stock) {
+        PointsGoods goods = new PointsGoods();
+        goods.setName(name);
+        goods.setDescription(description);
+        goods.setPointsPrice(pointsPrice);
+        goods.setStock(stock);
+        goods.setStatus(1);
+        return goods;
+    }
+
+    /** 演示车主给 500 初始积分，否则积分商城没法演示；已有流水就不再补 */
+    private void initDemoPoints() {
+        SysUser owner = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getUsername, "owner001"));
+        if (owner == null) {
+            return;
+        }
+        Long records = pointsRecordMapper.selectCount(new LambdaQueryWrapper<PointsRecord>()
+                .eq(PointsRecord::getUserId, owner.getId()));
+        int current = owner.getPoints() == null ? 0 : owner.getPoints();
+        if (records > 0 || current > 0) {
+            return;
+        }
+
+        int points = 500;
+        owner.setPoints(points);
+        sysUserMapper.updateById(owner);
+
+        PointsRecord record = new PointsRecord();
+        record.setUserId(owner.getId());
+        record.setChangeAmount(points);
+        record.setType("ADMIN_ADJUST");
+        record.setRemark("演示初始积分");
+        pointsRecordMapper.insert(record);
+        log.info("已为 owner001 初始化 {} 演示积分", points);
     }
 
     private void create(String username, String rawPassword, String nickname, String role) {

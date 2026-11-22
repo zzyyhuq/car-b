@@ -17,6 +17,7 @@ import com.example.beauty.module.order.entity.ServiceOrder;
 import com.example.beauty.module.order.mapper.ServiceOrderMapper;
 import com.example.beauty.module.order.service.OrderService;
 import com.example.beauty.module.order.vo.OrderVO;
+import com.example.beauty.module.points.service.PointsService;
 import com.example.beauty.module.servicetype.entity.ServiceType;
 import com.example.beauty.module.servicetype.mapper.ServiceTypeMapper;
 import com.example.beauty.module.user.entity.SysUser;
@@ -24,8 +25,11 @@ import com.example.beauty.module.user.mapper.SysUserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -48,13 +52,16 @@ public class OrderServiceImpl implements OrderService {
     private final CarMapper carMapper;
     private final ServiceTypeMapper serviceTypeMapper;
     private final SysUserMapper sysUserMapper;
+    private final PointsService pointsService;
 
     public OrderServiceImpl(ServiceOrderMapper orderMapper, CarMapper carMapper,
-                            ServiceTypeMapper serviceTypeMapper, SysUserMapper sysUserMapper) {
+                            ServiceTypeMapper serviceTypeMapper, SysUserMapper sysUserMapper,
+                            PointsService pointsService) {
         this.orderMapper = orderMapper;
         this.carMapper = carMapper;
         this.serviceTypeMapper = serviceTypeMapper;
         this.sysUserMapper = sysUserMapper;
+        this.pointsService = pointsService;
     }
 
     @Override
@@ -183,6 +190,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void updateStatus(Long id, String status) {
         ServiceOrder order = getRaw(id);
         if (!OrderStatus.valid(status)) {
@@ -204,13 +212,30 @@ public class OrderServiceImpl implements OrderService {
                 && Role.STAFF.equals(UserContext.getRole())) {
             update.setStaffId(UserContext.getId());
         }
-        if (OrderStatus.COMPLETED.equals(status)) {
+        boolean completed = OrderStatus.COMPLETED.equals(status);
+        if (completed) {
             update.setFinishTime(LocalDateTime.now());
-            // TODO 模块 5：订单完成时按 金额 × 积分倍率 发放积分并写 points_record
         }
         orderMapper.updateById(update);
+        if (completed) {
+            awardOrderPoints(order);
+        }
         log.info("订单状态流转 orderNo={} {} -> {} operator={}",
                 order.getOrderNo(), order.getStatus(), status, UserContext.getId());
+    }
+
+    /** 订单完成时按 实付金额 × 积分倍率 发放积分，向下取整 */
+    private void awardOrderPoints(ServiceOrder order) {
+        ServiceType serviceType = serviceTypeMapper.selectById(order.getServiceTypeId());
+        BigDecimal rate = serviceType == null || serviceType.getPointsRate() == null
+                ? BigDecimal.ONE : serviceType.getPointsRate();
+        BigDecimal amount = order.getAmount() == null ? BigDecimal.ZERO : order.getAmount();
+        int points = amount.multiply(rate).setScale(0, RoundingMode.DOWN).intValue();
+        if (points <= 0) {
+            log.info("订单金额为 0，不发放积分 orderNo={}", order.getOrderNo());
+            return;
+        }
+        pointsService.award(order.getUserId(), order.getId(), points, "订单完成奖励");
     }
 
     @Override

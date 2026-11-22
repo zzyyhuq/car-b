@@ -1,4 +1,5 @@
-const mock = require('../../mock/data.js')
+const { get, post } = require('../../utils/request')
+const { toServiceView } = require('../../utils/service')
 
 function pad(n) {
   return n < 10 ? '0' + n : '' + n
@@ -8,15 +9,12 @@ function formatDate(date) {
   return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate())
 }
 
-function formatDateTime(date) {
-  return formatDate(date) + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes())
-}
-
 Page({
   data: {
     service: null,
-    cars: mock.cars,
+    cars: [],
     carId: null,
+    loading: true,
     minDate: formatDate(new Date()),
     date: formatDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
     timeSlots: ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'],
@@ -26,12 +24,29 @@ Page({
   },
 
   onLoad(options) {
-    const service = mock.services.find(item => item.id === Number(options.id)) || mock.services[0]
-    this.setData({
-      service,
-      carId: mock.cars[0].id
+    const id = Number(options.id)
+    if (!id) {
+      this.setData({ loading: false })
+      wx.showToast({ title: '缺少服务项目', icon: 'none' })
+      return
+    }
+
+    Promise.all([
+      get('/api/service-type/' + id, {}, { loading: true }),
+      // 车辆加载失败不阻塞服务展示，提交时会再提示
+      get('/api/car/my', {}, { silent: true }).catch(() => [])
+    ]).then(([data, cars]) => {
+      const service = toServiceView(data)
+      this.setData({
+        service,
+        cars: cars || [],
+        carId: cars && cars.length ? cars[0].id : null,
+        loading: false
+      })
+      wx.setNavigationBarTitle({ title: '预约 ' + service.name })
+    }).catch(() => {
+      this.setData({ loading: false })
     })
-    wx.setNavigationBarTitle({ title: '预约 ' + service.name })
   },
 
   chooseCar(e) {
@@ -55,42 +70,54 @@ Page({
   },
 
   submit() {
-    const { service, cars, carId, date, time, remark, submitting } = this.data
+    const { service, carId, date, time, remark, submitting } = this.data
     if (submitting) {
+      return
+    }
+    if (!service) {
+      wx.showToast({ title: '服务项目加载失败', icon: 'none' })
+      return
+    }
+    if (!carId) {
+      wx.showToast({ title: '请先选择车辆', icon: 'none' })
       return
     }
     if (!time) {
       wx.showToast({ title: '请选择预约时间', icon: 'none' })
       return
     }
-    const car = cars.find(item => item.id === carId)
-    const orders = wx.getStorageSync('beauty_orders') || []
-    const order = {
-      id: Date.now(),
-      orderNo: 'BM' + String(Date.now()).slice(-10),
-      serviceId: service.id,
-      serviceName: service.name,
-      price: service.price,
-      carPlate: car.plateNo,
-      carName: car.brand + ' ' + car.model,
-      date,
-      time,
-      remark,
-      status: '待接单',
-      createTime: formatDateTime(new Date())
+    const appointmentTime = date + 'T' + time + ':00'
+    if (new Date(appointmentTime).getTime() <= Date.now()) {
+      wx.showToast({ title: '预约时间需晚于当前时间', icon: 'none' })
+      return
     }
-    orders.unshift(order)
-    wx.setStorageSync('beauty_orders', orders)
 
     this.setData({ submitting: true })
-    wx.showModal({
-      title: '预约成功',
-      content: service.name + '\n' + date + ' ' + time + '\n请按时到店，订单可在「我的」中查看',
-      showCancel: false,
-      success: () => {
+    post('/api/order', {
+      carId,
+      serviceTypeId: service.id,
+      appointmentTime,
+      remark: (remark || '').trim()
+    }, { loading: true })
+      // 再查一次详情拿订单号，失败也不影响预约结果
+      .then(id => get('/api/order/' + id, {}, { silent: true }).catch(() => null))
+      .then(order => {
         this.setData({ submitting: false })
-        wx.switchTab({ url: '/pages/mine/index' })
-      }
-    })
+        const lines = [service.name]
+        if (order && order.orderNo) {
+          lines.push('单号 ' + order.orderNo)
+        }
+        lines.push(date + ' ' + time)
+        lines.push('请按时到店，服务完成后到店支付')
+        wx.showModal({
+          title: '预约成功',
+          content: lines.join('\n'),
+          showCancel: false,
+          success: () => wx.switchTab({ url: '/pages/mine/index' })
+        })
+      })
+      .catch(() => {
+        this.setData({ submitting: false })
+      })
   }
 })

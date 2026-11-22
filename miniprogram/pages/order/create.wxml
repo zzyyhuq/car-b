@@ -1,5 +1,5 @@
 <view class="page create-page">
-  <view class="block card">
+  <view class="block card" wx:if="{{service}}">
     <view class="block-title">服务项目</view>
     <view class="service-row">
       <text class="service-emoji">{{service.emoji}}</text>
@@ -10,6 +10,8 @@
       <text class="price">¥{{service.price}}</text>
     </view>
   </view>
+  <view class="empty" wx:elif="{{loading}}">加载中...</view>
+  <view class="empty" wx:else>服务项目不存在或已下架</view>
 
   <view class="block card">
     <view class="block-title">选择车辆</view>
@@ -28,6 +30,7 @@
         <view class="muted">{{item.brand}} {{item.model}} · {{item.color}}</view>
       </view>
     </view>
+    <view class="empty" wx:if="{{!loading && !cars.length}}">暂无车辆，请先添加车辆</view>
     <view class="add-car" bindtap="addCar">＋ 添加车辆</view>
   </view>
 
@@ -64,8 +67,9 @@
   <view class="submit-bar">
     <view class="bottom-price">
       <text class="muted">合计</text>
-      <text class="price total">¥{{service.price}}</text>
+      <text class="price total">¥{{service ? service.price : 0}}</text>
+      <text class="pay-hint">到店支付</text>
     </view>
-    <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submit">提交预约</view>
+    <view class="submit-btn {{submitting || !service ? 'disabled' : ''}}" bindtap="submit">提交预约</view>
   </view>
 </view>
