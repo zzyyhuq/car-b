@@ -74,6 +74,8 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/order/{id}/assign` | ADMIN | 派单给员工 |
 | PUT | `/api/order/{id}/cancel` | 登录 | 取消订单（车主只能取消自己的，限待接单/已接单） |
 | PUT | `/api/order/{id}/status` | ADMIN/STAFF | 状态流转（取消走取消接口） |
+| GET | `/api/service-process/order/{orderId}` | 登录 | 订单服务进度时间线（车主只能看自己的） |
+| POST | `/api/service-process` | ADMIN/STAFF | 登记服务进度（节点 + 说明 + 图片） |
 | GET | `/api/car/my` | OWNER | 我的车辆 |
 | GET | `/api/car/user/{userId}` | ADMIN/STAFF | 指定车主的车辆（到店开单用） |
 | POST | `/api/car` | OWNER | 新增车辆 |

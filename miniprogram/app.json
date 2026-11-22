@@ -4,6 +4,7 @@
     "pages/service/list",
     "pages/service/detail",
     "pages/order/create",
+    "pages/order/detail",
     "pages/points/mall",
     "pages/mine/index"
   ],

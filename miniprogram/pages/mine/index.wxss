@@ -134,6 +134,13 @@
   border-top: 2rpx solid #f3f5f8;
 }
 
+.order-more {
+  margin-top: 10rpx;
+  text-align: right;
+  color: #1677ff;
+  font-size: 23rpx;
+}
+
 .menu {
   margin-top: 32rpx;
   padding: 0 28rpx;

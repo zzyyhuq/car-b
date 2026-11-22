@@ -81,6 +81,12 @@ Page({
     })
   },
 
+  goOrderDetail(e) {
+    wx.navigateTo({
+      url: '/pages/order/detail?id=' + e.currentTarget.dataset.id
+    })
+  },
+
   goService() {
     wx.switchTab({ url: '/pages/service/list' })
   },

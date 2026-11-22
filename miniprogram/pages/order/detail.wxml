@@ -1,0 +1,82 @@
+<view class="page" wx:if="{{order}}">
+  <view class="status-card {{statusClass}}">
+    <view class="status-text">{{order.statusText}}</view>
+    <view class="status-sub">{{order.serviceName}} · ¥{{order.price}}</view>
+  </view>
+
+  <view class="block card">
+    <view class="block-title">订单信息</view>
+    <view class="info-row">
+      <text class="info-label">订单号</text>
+      <text class="info-value">{{order.orderNo}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">预约时间</text>
+      <text class="info-value">{{order.appointmentDate}} {{order.appointmentTime}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">车辆</text>
+      <text class="info-value">{{order.plateNo}} {{order.carBrand}} {{order.carModel}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">负责员工</text>
+      <text class="info-value">{{order.staffName || '待分配'}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.remark}}">
+      <text class="info-label">备注</text>
+      <text class="info-value">{{order.remark}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.cancelReason}}">
+      <text class="info-label">取消原因</text>
+      <text class="info-value">{{order.cancelReason}}</text>
+    </view>
+    <view class="info-row" wx:if="{{order.finishTimeText}}">
+      <text class="info-label">完成时间</text>
+      <text class="info-value">{{order.finishTimeText}}</text>
+    </view>
+  </view>
+
+  <view class="block card">
+    <view class="block-title">服务进度</view>
+    <view class="empty" wx:if="{{!timeline.length}}">员工还未登记进度</view>
+    <view class="timeline" wx:else>
+      <view class="timeline-item" wx:for="{{timeline}}" wx:key="id">
+        <view class="timeline-axis">
+          <view class="timeline-dot {{index === timeline.length - 1 ? 'last' : ''}}"></view>
+          <view class="timeline-line" wx:if="{{index !== timeline.length - 1}}"></view>
+        </view>
+        <view class="timeline-body">
+          <view class="timeline-head">
+            <text class="timeline-node">{{item.nodeText}}</text>
+            <text class="timeline-time">{{item.time}}</text>
+          </view>
+          <view class="timeline-content" wx:if="{{item.content}}">{{item.content}}</view>
+          <view class="timeline-staff" wx:if="{{item.staffName}}">{{item.staffName}} 登记</view>
+          <view class="timeline-images" wx:if="{{item.images.length}}">
+            <image
+              wx:for="{{item.images}}"
+              wx:for-item="img"
+              wx:for-index="imgIndex"
+              wx:key="*this"
+              class="timeline-image"
+              src="{{img}}"
+              mode="aspectFill"
+              data-index="{{index}}"
+              data-src="{{img}}"
+              bindtap="previewImage"
+            />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view
+    class="cancel-btn"
+    wx:if="{{order.status === 'PENDING' || order.status === 'ACCEPTED'}}"
+    bindtap="cancelOrder"
+  >{{cancelling ? '取消中...' : '取消订单'}}</view>
+</view>
+
+<view class="empty" wx:elif="{{loading}}">加载中...</view>
+<view class="empty" wx:else>订单不存在</view>
