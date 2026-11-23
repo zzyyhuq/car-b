@@ -14,6 +14,8 @@ public class PointsExchangeVO {
     private String exchangeNo;
     private Long goodsId;
     private String goodsName;
+    private Long userId;
+    private String userName;
     private Integer pointsCost;
     private String status;
     private String statusText;

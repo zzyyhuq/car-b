@@ -3,8 +3,12 @@ package com.example.beauty.module.points.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.beauty.common.PageResult;
 import com.example.beauty.common.exception.BusinessException;
 import com.example.beauty.common.security.UserContext;
+import com.example.beauty.module.points.dto.PointsExchangeQuery;
+import com.example.beauty.module.points.dto.PointsGoodsQuery;
+import com.example.beauty.module.points.dto.PointsGoodsSaveDTO;
 import com.example.beauty.module.points.entity.PointsExchange;
 import com.example.beauty.module.points.entity.PointsGoods;
 import com.example.beauty.module.points.entity.PointsRecord;
@@ -19,11 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -64,6 +70,67 @@ public class PointsServiceImpl implements PointsService {
                 .eq(PointsGoods::getStatus, 1)
                 .orderByAsc(PointsGoods::getPointsPrice)
                 .orderByAsc(PointsGoods::getId));
+    }
+
+    @Override
+    public PageResult<PointsGoods> pageGoods(PointsGoodsQuery query) {
+        LambdaQueryWrapper<PointsGoods> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.hasText(query.getName()), PointsGoods::getName, query.getName())
+                .eq(query.getStatus() != null, PointsGoods::getStatus, query.getStatus())
+                .orderByDesc(PointsGoods::getCreateTime);
+        Page<PointsGoods> page = goodsMapper.selectPage(
+                new Page<>(query.getPage(), query.getSize()), wrapper);
+        return PageResult.of(page);
+    }
+
+    @Override
+    public Long createGoods(PointsGoodsSaveDTO dto) {
+        PointsGoods goods = new PointsGoods();
+        BeanUtils.copyProperties(dto, goods);
+        if (goods.getStatus() == null) {
+            goods.setStatus(1);
+        }
+        goodsMapper.insert(goods);
+        log.info("新增积分商品 goodsId={} name={} pointsPrice={} stock={}",
+                goods.getId(), goods.getName(), goods.getPointsPrice(), goods.getStock());
+        return goods.getId();
+    }
+
+    @Override
+    public void updateGoods(Long id, PointsGoodsSaveDTO dto) {
+        requireGoods(id);
+        PointsGoods goods = new PointsGoods();
+        BeanUtils.copyProperties(dto, goods);
+        goods.setId(id);
+        // updateById 忽略 null，没传的字段保持原值
+        goodsMapper.updateById(goods);
+    }
+
+    @Override
+    public void updateGoodsStatus(Long id, Integer status) {
+        if (status == null || (status != 0 && status != 1)) {
+            throw new BusinessException(400, "状态只能是 0（下架）或 1（上架）");
+        }
+        requireGoods(id);
+        PointsGoods goods = new PointsGoods();
+        goods.setId(id);
+        goods.setStatus(status);
+        goodsMapper.updateById(goods);
+    }
+
+    @Override
+    public void deleteGoods(Long id) {
+        requireGoods(id);
+        goodsMapper.deleteById(id);
+        log.info("删除积分商品 goodsId={} operator={}", id, UserContext.getId());
+    }
+
+    private PointsGoods requireGoods(Long id) {
+        PointsGoods goods = goodsMapper.selectById(id);
+        if (goods == null) {
+            throw new BusinessException(404, "积分商品不存在");
+        }
+        return goods;
     }
 
     /**
@@ -164,6 +231,66 @@ public class PointsServiceImpl implements PointsService {
     }
 
     @Override
+    public PageResult<PointsExchangeVO> pageExchanges(PointsExchangeQuery query) {
+        LambdaQueryWrapper<PointsExchange> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.hasText(query.getExchangeNo()),
+                        PointsExchange::getExchangeNo, query.getExchangeNo())
+                .eq(StringUtils.hasText(query.getStatus()), PointsExchange::getStatus, query.getStatus())
+                .eq(query.getUserId() != null, PointsExchange::getUserId, query.getUserId())
+                .eq(query.getGoodsId() != null, PointsExchange::getGoodsId, query.getGoodsId())
+                .orderByDesc(PointsExchange::getExchangeTime)
+                .orderByDesc(PointsExchange::getId);
+        Page<PointsExchange> page = exchangeMapper.selectPage(
+                new Page<>(query.getPage(), query.getSize()), wrapper);
+
+        List<PointsExchange> records = page.getRecords();
+        Set<Long> goodsIds = records.stream().map(PointsExchange::getGoodsId)
+                .filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<Long> userIds = records.stream().map(PointsExchange::getUserId)
+                .filter(Objects::nonNull).collect(Collectors.toSet());
+        Map<Long, PointsGoods> goodsMap = goodsIds.isEmpty() ? Map.of()
+                : goodsMapper.selectBatchIds(goodsIds).stream()
+                .collect(Collectors.toMap(PointsGoods::getId, goods -> goods));
+        Map<Long, SysUser> userMap = userIds.isEmpty() ? Map.of()
+                : sysUserMapper.selectBatchIds(userIds).stream()
+                .collect(Collectors.toMap(SysUser::getId, user -> user));
+
+        List<PointsExchangeVO> vos = records.stream().map(exchange -> {
+            PointsGoods goods = goodsMap.get(exchange.getGoodsId());
+            SysUser user = userMap.get(exchange.getUserId());
+            return toVO(exchange,
+                    goods == null ? "商品已删除" : goods.getName(),
+                    user == null ? "用户已删除" : user.getNickname());
+        }).toList();
+
+        PageResult<PointsExchangeVO> result = new PageResult<>();
+        result.setTotal(page.getTotal());
+        result.setPage(page.getCurrent());
+        result.setSize(page.getSize());
+        result.setRecords(vos);
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public void verifyExchange(Long id) {
+        PointsExchange exchange = exchangeMapper.selectById(id);
+        if (exchange == null) {
+            throw new BusinessException(404, "兑换单不存在");
+        }
+        if (!STATUS_PENDING.equals(exchange.getStatus())) {
+            throw new BusinessException(400, "该兑换单已核销或已取消");
+        }
+
+        PointsExchange update = new PointsExchange();
+        update.setId(id);
+        update.setStatus("VERIFIED");
+        update.setVerifyTime(LocalDateTime.now().withNano(0));
+        exchangeMapper.updateById(update);
+        log.info("兑换单核销 exchangeNo={} operator={}", exchange.getExchangeNo(), UserContext.getId());
+    }
+
+    @Override
     public List<PointsRecord> myRecords(Integer limit) {
         int size = clamp(limit, DEFAULT_RECORD_LIMIT, MAX_RECORD_LIMIT);
         return recordMapper.selectPage(
@@ -208,9 +335,14 @@ public class PointsServiceImpl implements PointsService {
     }
 
     private PointsExchangeVO toVO(PointsExchange exchange, String goodsName) {
+        return toVO(exchange, goodsName, null);
+    }
+
+    private PointsExchangeVO toVO(PointsExchange exchange, String goodsName, String userName) {
         PointsExchangeVO vo = new PointsExchangeVO();
         BeanUtils.copyProperties(exchange, vo);
         vo.setGoodsName(goodsName);
+        vo.setUserName(userName);
         vo.setStatusText(statusText(exchange.getStatus()));
         return vo;
     }

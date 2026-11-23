@@ -82,8 +82,15 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/car/{id}` | OWNER | 修改车辆（只能改自己的） |
 | DELETE | `/api/car/{id}` | OWNER | 删除车辆（已有订单的不能删） |
 | GET | `/api/points/goods/list` | 登录 | 上架中的积分商品 |
+| GET | `/api/points/goods/page` | ADMIN | 积分商品分页（name/status 筛选） |
+| POST | `/api/points/goods` | ADMIN | 新增积分商品 |
+| PUT | `/api/points/goods/{id}` | ADMIN | 修改积分商品 |
+| PUT | `/api/points/goods/{id}/status?status=1` | ADMIN | 上架/下架 |
+| DELETE | `/api/points/goods/{id}` | ADMIN | 逻辑删除积分商品 |
 | POST | `/api/points/exchange` | OWNER | 兑换积分商品（扣积分 + 扣库存 + 写流水） |
 | GET | `/api/points/exchange/my` | OWNER | 我的兑换记录 |
+| GET | `/api/points/exchange/page` | ADMIN/STAFF | 兑换单分页（单号/状态/用户/商品筛选） |
+| PUT | `/api/points/exchange/{id}/verify` | ADMIN/STAFF | 到店核销（待核销 → 已核销） |
 | GET | `/api/points/record/my` | OWNER | 我的积分流水（limit 默认 50、最大 100） |
 
 服务项目新增示例：

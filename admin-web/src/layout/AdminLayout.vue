@@ -25,6 +25,14 @@
           <el-icon><PriceTag /></el-icon>
           <span>服务项目</span>
         </el-menu-item>
+        <el-menu-item v-if="auth.isAdmin" index="/points/goods">
+          <el-icon><Goods /></el-icon>
+          <span>积分商品</span>
+        </el-menu-item>
+        <el-menu-item index="/points/exchanges">
+          <el-icon><Tickets /></el-icon>
+          <span>兑换核销</span>
+        </el-menu-item>
         <el-menu-item v-if="auth.isAdmin" index="/users">
           <el-icon><User /></el-icon>
           <span>用户管理</span>
@@ -68,7 +76,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowDown, Document, PriceTag, SwitchButton, User } from '@element-plus/icons-vue'
+import { ArrowDown, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
 import { useAuthStore } from '../stores/auth'
 import { ROLE_TEXT } from '../utils/format'
 

@@ -26,6 +26,18 @@ const routes = [
         meta: { title: '服务项目' }
       },
       {
+        path: 'points/goods',
+        name: 'points-goods',
+        component: () => import('../views/PointsGoodsView.vue'),
+        meta: { title: '积分商品', roles: ['ADMIN'] }
+      },
+      {
+        path: 'points/exchanges',
+        name: 'points-exchanges',
+        component: () => import('../views/ExchangeView.vue'),
+        meta: { title: '兑换核销', roles: ['ADMIN', 'STAFF'] }
+      },
+      {
         path: 'users',
         name: 'users',
         component: () => import('../views/UserView.vue'),
