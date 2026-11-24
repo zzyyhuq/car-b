@@ -1,0 +1,19 @@
+<view class="page" wx:if="{{activity}}">
+  <image
+    wx:if="{{activity.cover}}"
+    class="cover"
+    src="{{activity.cover}}"
+    mode="aspectFill"
+  />
+
+  <view class="card detail">
+    <view class="title">{{activity.title}}</view>
+    <view class="time" wx:if="{{activity.startTimeText}}">
+      {{activity.startTimeText}} 至 {{activity.endTimeText}}
+    </view>
+    <view class="content">{{activity.content}}</view>
+  </view>
+</view>
+
+<view class="empty" wx:elif="{{loading}}">加载中...</view>
+<view class="empty" wx:else>活动不存在或已下线</view>

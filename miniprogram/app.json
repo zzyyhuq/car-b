@@ -3,6 +3,8 @@
     "pages/index/index",
     "pages/service/list",
     "pages/service/detail",
+    "pages/notice/detail",
+    "pages/activity/detail",
     "pages/order/create",
     "pages/order/detail",
     "pages/points/mall",

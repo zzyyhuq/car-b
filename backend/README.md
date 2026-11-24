@@ -65,7 +65,19 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/service-type/{id}/status?status=1` | ADMIN | 上架/下架 |
 | DELETE | `/api/service-type/{id}` | ADMIN | 逻辑删除 |
 | GET | `/api/notice/list` | 登录 | 已发布公告列表（limit 默认 5、最大 20） |
+| GET | `/api/notice/page` | ADMIN | 公告分页（标题/状态筛选） |
+| GET | `/api/notice/{id}` | 登录 | 公告详情（车主只能看已发布） |
+| POST | `/api/notice` | ADMIN | 新增公告 |
+| PUT | `/api/notice/{id}` | ADMIN | 修改公告 |
+| PUT | `/api/notice/{id}/status?status=1` | ADMIN | 发布/下线 |
+| DELETE | `/api/notice/{id}` | ADMIN | 删除公告 |
 | GET | `/api/activity/list` | 登录 | 进行中的活动列表（limit 默认 5、最大 20） |
+| GET | `/api/activity/page` | ADMIN | 活动分页（标题/状态筛选） |
+| GET | `/api/activity/{id}` | 登录 | 活动详情（车主只能看进行中） |
+| POST | `/api/activity` | ADMIN | 新增活动 |
+| PUT | `/api/activity/{id}` | ADMIN | 修改活动 |
+| PUT | `/api/activity/{id}/status?status=1` | ADMIN | 上线/下线 |
+| DELETE | `/api/activity/{id}` | ADMIN | 删除活动 |
 | POST | `/api/order` | OWNER | 车主预约下单 |
 | POST | `/api/order/admin-create` | ADMIN/STAFF | 到店开单（替车主建单） |
 | GET | `/api/order/my` | OWNER | 我的订单（可按 status 筛选） |

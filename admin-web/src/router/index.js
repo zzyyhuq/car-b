@@ -38,6 +38,18 @@ const routes = [
         meta: { title: '兑换核销', roles: ['ADMIN', 'STAFF'] }
       },
       {
+        path: 'notices',
+        name: 'notices',
+        component: () => import('../views/NoticeView.vue'),
+        meta: { title: '公告管理', roles: ['ADMIN'] }
+      },
+      {
+        path: 'activities',
+        name: 'activities',
+        component: () => import('../views/ActivityView.vue'),
+        meta: { title: '活动管理', roles: ['ADMIN'] }
+      },
+      {
         path: 'messages',
         name: 'messages',
         component: () => import('../views/MessageView.vue'),

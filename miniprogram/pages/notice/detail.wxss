@@ -1,0 +1,24 @@
+.detail {
+  padding: 36rpx 32rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.time {
+  margin-top: 12rpx;
+  color: #a3acbb;
+  font-size: 22rpx;
+}
+
+.content {
+  margin-top: 26rpx;
+  color: #4a5568;
+  font-size: 28rpx;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

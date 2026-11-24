@@ -8,14 +8,26 @@
   <view class="notice card" wx:if="{{notices.length}}">
     <text class="notice-label">公告</text>
     <swiper class="notice-swiper" vertical autoplay circular interval="3000">
-      <swiper-item wx:for="{{notices}}" wx:key="*this">
-        <text class="notice-text">{{item}}</text>
+      <swiper-item
+        wx:for="{{notices}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="goNotice"
+      >
+        <text class="notice-text">{{item.title}}</text>
       </swiper-item>
     </swiper>
   </view>
 
   <scroll-view class="activity-scroll" wx:if="{{activities.length}}" scroll-x enhanced show-scrollbar="{{false}}">
-    <view class="activity-card" wx:for="{{activities}}" wx:key="id" style="background: {{item.bg}}">
+    <view
+      class="activity-card"
+      wx:for="{{activities}}"
+      wx:key="id"
+      style="background: {{item.bg}}"
+      data-id="{{item.id}}"
+      bindtap="goActivity"
+    >
       <view class="activity-title">{{item.title}}</view>
       <view class="activity-desc">{{item.desc}}</view>
     </view>

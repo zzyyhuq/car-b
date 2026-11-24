@@ -1,0 +1,10 @@
+<view class="page" wx:if="{{notice}}">
+  <view class="card detail">
+    <view class="title">{{notice.title}}</view>
+    <view class="time" wx:if="{{notice.publishTimeText}}">发布于 {{notice.publishTimeText}}</view>
+    <view class="content">{{notice.content}}</view>
+  </view>
+</view>
+
+<view class="empty" wx:elif="{{loading}}">加载中...</view>
+<view class="empty" wx:else>公告不存在或已下线</view>

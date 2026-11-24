@@ -42,8 +42,8 @@ Page({
       this.setData({
         recommends: (services || []).slice(0, 3).map(item => toServiceView(item)),
         notices: (notices || [])
-          .map(item => item.title || item.content || '')
-          .filter(Boolean),
+          .filter(item => item.title || item.content)
+          .map(item => ({ id: item.id, title: item.title || item.content })),
         activities: (activities || []).map((item, index) => ({
           id: item.id,
           title: item.title,
@@ -60,6 +60,18 @@ Page({
   goDetail(e) {
     wx.navigateTo({
       url: '/pages/service/detail?id=' + e.currentTarget.dataset.id
+    })
+  },
+
+  goNotice(e) {
+    wx.navigateTo({
+      url: '/pages/notice/detail?id=' + e.currentTarget.dataset.id
+    })
+  },
+
+  goActivity(e) {
+    wx.navigateTo({
+      url: '/pages/activity/detail?id=' + e.currentTarget.dataset.id
     })
   },
 
