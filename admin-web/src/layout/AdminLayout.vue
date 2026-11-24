@@ -33,6 +33,10 @@
           <el-icon><Tickets /></el-icon>
           <span>兑换核销</span>
         </el-menu-item>
+        <el-menu-item v-if="auth.isAdmin" index="/messages">
+          <el-icon><ChatDotRound /></el-icon>
+          <span>留言管理</span>
+        </el-menu-item>
         <el-menu-item v-if="auth.isAdmin" index="/users">
           <el-icon><User /></el-icon>
           <span>用户管理</span>
@@ -76,7 +80,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowDown, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
+import { ArrowDown, ChatDotRound, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
 import { useAuthStore } from '../stores/auth'
 import { ROLE_TEXT } from '../utils/format'
 

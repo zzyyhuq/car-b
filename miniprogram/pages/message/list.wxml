@@ -1,0 +1,38 @@
+<view class="page">
+  <view class="head card">
+    <view>
+      <view class="head-title">我的留言与评价</view>
+      <view class="muted">管理员的回复会显示在这里</view>
+    </view>
+    <view class="write-btn" bindtap="goFeedback">写留言</view>
+  </view>
+
+  <view class="empty card" wx:if="{{!loading && !messages.length}}">
+    <text class="empty-icon">💬</text>
+    <view>还没有留言或评价</view>
+    <view class="empty-btn" bindtap="goFeedback">去写一条</view>
+  </view>
+
+  <view class="msg-card card" wx:for="{{messages}}" wx:key="id">
+    <view class="msg-top">
+      <view class="msg-tags">
+        <text class="tag type-{{item.type === 'EVALUATION' ? 'eval' : 'feedback'}}">{{item.typeText}}</text>
+        <text class="tag status-{{item.status}}">{{item.statusText}}</text>
+      </view>
+      <text class="msg-time">{{item.time}}</text>
+    </view>
+
+    <view class="msg-stars" wx:if="{{item.stars}}">{{item.stars}}</view>
+    <view class="msg-content">{{item.content}}</view>
+    <view class="msg-order" wx:if="{{item.orderNo}}">订单 {{item.orderNo}}</view>
+
+    <view class="msg-reply" wx:if="{{item.reply}}">
+      <view class="reply-label">店家回复</view>
+      <view class="reply-content">{{item.reply}}</view>
+      <view class="reply-time" wx:if="{{item.replyTime}}">{{item.replyTime}}</view>
+    </view>
+    <view class="msg-wait" wx:elif="{{item.type === 'FEEDBACK' && item.status === 0}}">
+      等待管理员审核和回复
+    </view>
+  </view>
+</view>

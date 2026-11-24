@@ -38,6 +38,12 @@ const routes = [
         meta: { title: '兑换核销', roles: ['ADMIN', 'STAFF'] }
       },
       {
+        path: 'messages',
+        name: 'messages',
+        component: () => import('../views/MessageView.vue'),
+        meta: { title: '留言管理', roles: ['ADMIN'] }
+      },
+      {
         path: 'users',
         name: 'users',
         component: () => import('../views/UserView.vue'),

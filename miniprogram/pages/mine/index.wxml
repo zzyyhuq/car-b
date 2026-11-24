@@ -79,8 +79,12 @@
       <text>🚗 车辆管理</text>
       <text class="arrow">›</text>
     </view>
-    <view class="menu-item" bindtap="notReady">
+    <view class="menu-item" bindtap="goFeedback">
       <text>💬 留言反馈</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goMessages">
+      <text>📝 我的留言与评价</text>
       <text class="arrow">›</text>
     </view>
   </view>

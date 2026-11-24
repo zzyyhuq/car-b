@@ -63,7 +63,8 @@ public class ServiceProcessServiceImpl implements ServiceProcessService {
                 .collect(Collectors.toMap(SysUser::getId, user -> user));
 
         return processes.stream()
-                .map(process -> toVO(process, staffMap.get(process.getStaffId())))
+                .map(process -> toVO(process,
+                        process.getStaffId() == null ? null : staffMap.get(process.getStaffId())))
                 .toList();
     }
 

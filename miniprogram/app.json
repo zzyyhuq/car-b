@@ -6,6 +6,8 @@
     "pages/order/create",
     "pages/order/detail",
     "pages/points/mall",
+    "pages/message/list",
+    "pages/message/feedback",
     "pages/mine/index"
   ],
   "window": {

@@ -1,0 +1,125 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx;
+}
+
+.head-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.write-btn {
+  padding: 12rpx 28rpx;
+  border-radius: 999rpx;
+  background: #eaf2ff;
+  color: #1677ff;
+  font-size: 25rpx;
+}
+
+.msg-card {
+  margin-top: 20rpx;
+  padding: 26rpx 28rpx;
+}
+
+.msg-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.msg-tags {
+  display: flex;
+  gap: 10rpx;
+}
+
+.tag {
+  padding: 4rpx 14rpx;
+  border-radius: 8rpx;
+  font-size: 21rpx;
+}
+
+.type-eval {
+  background: #fff4e5;
+  color: #ff8f1f;
+}
+
+.type-feedback {
+  background: #eaf2ff;
+  color: #1677ff;
+}
+
+.status-0 {
+  background: #fff8e6;
+  color: #d48806;
+}
+
+.status-1 {
+  background: #eaf8ef;
+  color: #00a870;
+}
+
+.status-2 {
+  background: #f1f2f5;
+  color: #8a94a6;
+}
+
+.msg-time {
+  color: #a3acbb;
+  font-size: 21rpx;
+}
+
+.msg-stars {
+  margin-top: 14rpx;
+  color: #ff9f1c;
+  font-size: 30rpx;
+  letter-spacing: 4rpx;
+}
+
+.msg-content {
+  margin-top: 12rpx;
+  color: #1b2537;
+  font-size: 27rpx;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+.msg-order {
+  margin-top: 10rpx;
+  color: #a3acbb;
+  font-size: 21rpx;
+}
+
+.msg-reply {
+  margin-top: 18rpx;
+  padding: 18rpx;
+  border-radius: 14rpx;
+  background: #f6f8fb;
+}
+
+.reply-label {
+  color: #1677ff;
+  font-size: 22rpx;
+  margin-bottom: 8rpx;
+}
+
+.reply-content {
+  color: #4a5568;
+  font-size: 25rpx;
+  line-height: 1.7;
+  word-break: break-all;
+}
+
+.reply-time {
+  margin-top: 8rpx;
+  color: #a3acbb;
+  font-size: 21rpx;
+}
+
+.msg-wait {
+  margin-top: 16rpx;
+  color: #a3acbb;
+  font-size: 22rpx;
+}

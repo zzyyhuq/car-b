@@ -76,6 +76,13 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/order/{id}/status` | ADMIN/STAFF | 状态流转（取消走取消接口） |
 | GET | `/api/service-process/order/{orderId}` | 登录 | 订单服务进度时间线（车主只能看自己的） |
 | POST | `/api/service-process` | ADMIN/STAFF | 登记服务进度（节点 + 说明 + 图片） |
+| POST | `/api/message/evaluate` | OWNER | 评价已完成订单，订单同步变已评价 |
+| POST | `/api/message` | OWNER | 提交留言（默认待审核） |
+| GET | `/api/message/my` | OWNER | 我的评价与留言 |
+| GET | `/api/message/order/{orderId}` | 登录 | 查询订单评价（没有时 data 为 null） |
+| GET | `/api/message/page` | ADMIN | 留言/评价分页（type/status/keyword 筛选） |
+| PUT | `/api/message/{id}/reply` | ADMIN | 回复留言/评价 |
+| PUT | `/api/message/{id}/audit` | ADMIN | 审核（0 待审核 / 1 通过 / 2 隐藏） |
 | GET | `/api/car/my` | OWNER | 我的车辆 |
 | GET | `/api/car/user/{userId}` | ADMIN/STAFF | 指定车主的车辆（到店开单用） |
 | POST | `/api/car` | OWNER | 新增车辆 |

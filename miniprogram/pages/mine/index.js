@@ -107,7 +107,11 @@ Page({
     wx.showToast({ title: '车辆管理将在阶段 4 实现', icon: 'none' })
   },
 
-  notReady() {
-    wx.showToast({ title: '该功能将在阶段 4 实现', icon: 'none' })
+  goFeedback() {
+    wx.navigateTo({ url: '/pages/message/feedback' })
+  },
+
+  goMessages() {
+    wx.navigateTo({ url: '/pages/message/list' })
   }
 })

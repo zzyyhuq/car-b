@@ -1,4 +1,4 @@
-const { get, put } = require('../../utils/request')
+const { get, post, put } = require('../../utils/request')
 
 function splitDateTime(value) {
   if (!value) {
@@ -15,6 +15,11 @@ function formatPrice(value) {
   return Number.isInteger(price) ? price : price.toFixed(2)
 }
 
+function starsText(rating) {
+  const value = Number(rating || 0)
+  return '★'.repeat(value) + '☆'.repeat(Math.max(0, 5 - value))
+}
+
 const STATUS_CLASS = {
   PENDING: 'pending',
   ACCEPTED: 'accepted',
@@ -28,6 +33,11 @@ Page({
   data: {
     order: null,
     timeline: [],
+    evaluation: null,
+    stars: [1, 2, 3, 4, 5],
+    rating: 5,
+    evaluateContent: '',
+    evaluating: false,
     statusClass: '',
     loading: true,
     cancelling: false
@@ -56,8 +66,10 @@ Page({
     return Promise.all([
       get('/api/order/' + id, {}, { loading: !this.data.order }),
       // 进度加载失败不阻塞订单信息
-      get('/api/service-process/order/' + id, {}, { silent: true }).catch(() => [])
-    ]).then(([order, list]) => {
+      get('/api/service-process/order/' + id, {}, { silent: true }).catch(() => []),
+      // 没有评价时返回 null
+      get('/api/message/order/' + id, {}, { silent: true }).catch(() => null)
+    ]).then(([order, list, evaluationData]) => {
       const appointment = splitDateTime(order.appointmentTime)
       this.setData({
         order: Object.assign({}, order, {
@@ -75,12 +87,50 @@ Page({
           time: splitDateTime(item.createTime).full,
           images: item.images || []
         })),
+        evaluation: evaluationData ? {
+          rating: evaluationData.rating || 0,
+          starsText: starsText(evaluationData.rating),
+          content: evaluationData.content || '',
+          reply: evaluationData.reply || '',
+          replyTimeText: splitDateTime(evaluationData.replyTime).full,
+          createTimeText: splitDateTime(evaluationData.createTime).full
+        } : null,
         loading: false
       })
       wx.setNavigationBarTitle({ title: order.serviceName || '订单详情' })
     }).catch(() => {
       this.setData({ loading: false })
     })
+  },
+
+  chooseRating(e) {
+    this.setData({ rating: Number(e.currentTarget.dataset.value) })
+  },
+
+  onEvaluateInput(e) {
+    this.setData({ evaluateContent: e.detail.value })
+  },
+
+  submitEvaluate() {
+    if (this.data.evaluating) {
+      return
+    }
+    if (!this.data.rating) {
+      wx.showToast({ title: '请选择星级', icon: 'none' })
+      return
+    }
+    this.setData({ evaluating: true })
+    post('/api/message/evaluate', {
+      orderId: this.orderId,
+      rating: this.data.rating,
+      content: (this.data.evaluateContent || '').trim()
+    }, { loading: true })
+      .then(() => {
+        wx.showToast({ title: '评价成功', icon: 'success' })
+        this.loadDetail()
+      })
+      .catch(() => {})
+      .then(() => this.setData({ evaluating: false }))
   },
 
   previewImage(e) {

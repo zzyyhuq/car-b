@@ -71,6 +71,41 @@
     </view>
   </view>
 
+  <view class="block card" wx:if="{{evaluation}}">
+    <view class="block-title">我的评价</view>
+    <view class="eval-stars readonly">{{evaluation.starsText}}</view>
+    <view class="eval-content" wx:if="{{evaluation.content}}">{{evaluation.content}}</view>
+    <view class="eval-reply" wx:if="{{evaluation.reply}}">
+      <view class="eval-reply-label">店家回复</view>
+      <view>{{evaluation.reply}}</view>
+      <view class="eval-reply-time" wx:if="{{evaluation.replyTimeText}}">{{evaluation.replyTimeText}}</view>
+    </view>
+    <view class="eval-time">{{evaluation.createTimeText}}</view>
+  </view>
+
+  <view class="block card" wx:elif="{{order.status === 'COMPLETED'}}">
+    <view class="block-title">服务评价</view>
+    <view class="eval-stars">
+      <text
+        wx:for="{{stars}}"
+        wx:key="*this"
+        class="eval-star {{rating >= item ? 'active' : ''}}"
+        data-value="{{item}}"
+        bindtap="chooseRating"
+      >★</text>
+    </view>
+    <textarea
+      class="eval-input"
+      placeholder="说说这次服务体验（选填）"
+      maxlength="500"
+      value="{{evaluateContent}}"
+      bindinput="onEvaluateInput"
+    />
+    <view class="eval-submit {{evaluating ? 'disabled' : ''}}" bindtap="submitEvaluate">
+      {{evaluating ? '提交中...' : '提交评价'}}
+    </view>
+  </view>
+
   <view
     class="cancel-btn"
     wx:if="{{order.status === 'PENDING' || order.status === 'ACCEPTED'}}"

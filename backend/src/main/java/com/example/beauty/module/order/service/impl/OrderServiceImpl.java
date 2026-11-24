@@ -224,6 +224,27 @@ public class OrderServiceImpl implements OrderService {
                 order.getOrderNo(), order.getStatus(), status, UserContext.getId());
     }
 
+    @Override
+    @Transactional
+    public void markEvaluated(Long orderId) {
+        ServiceOrder order = getRaw(orderId);
+        if (!Objects.equals(order.getUserId(), UserContext.getId())) {
+            throw new BusinessException(403, "无权操作该订单");
+        }
+        if (OrderStatus.EVALUATED.equals(order.getStatus())) {
+            throw new BusinessException(400, "该订单已评价");
+        }
+        if (!OrderStatus.COMPLETED.equals(order.getStatus())) {
+            throw new BusinessException(400, "订单完成后才能评价");
+        }
+
+        ServiceOrder update = new ServiceOrder();
+        update.setId(orderId);
+        update.setStatus(OrderStatus.EVALUATED);
+        orderMapper.updateById(update);
+        log.info("订单评价完成 orderNo={} userId={}", order.getOrderNo(), UserContext.getId());
+    }
+
     /** 订单完成时按 实付金额 × 积分倍率 发放积分，向下取整 */
     private void awardOrderPoints(ServiceOrder order) {
         ServiceType serviceType = serviceTypeMapper.selectById(order.getServiceTypeId());
@@ -357,7 +378,7 @@ public class OrderServiceImpl implements OrderService {
             if (owner != null) {
                 vo.setUserName(owner.getNickname());
             }
-            SysUser staff = userMap.get(order.getStaffId());
+            SysUser staff = order.getStaffId() == null ? null : userMap.get(order.getStaffId());
             if (staff != null) {
                 vo.setStaffName(staff.getNickname());
             }

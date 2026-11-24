@@ -225,7 +225,8 @@ public class PointsServiceImpl implements PointsService {
                 .collect(Collectors.toMap(PointsGoods::getId, goods -> goods));
 
         return exchanges.stream().map(exchange -> {
-            PointsGoods goods = goodsMap.get(exchange.getGoodsId());
+            PointsGoods goods = exchange.getGoodsId() == null
+                    ? null : goodsMap.get(exchange.getGoodsId());
             return toVO(exchange, goods == null ? "商品已删除" : goods.getName());
         }).toList();
     }
@@ -256,8 +257,10 @@ public class PointsServiceImpl implements PointsService {
                 .collect(Collectors.toMap(SysUser::getId, user -> user));
 
         List<PointsExchangeVO> vos = records.stream().map(exchange -> {
-            PointsGoods goods = goodsMap.get(exchange.getGoodsId());
-            SysUser user = userMap.get(exchange.getUserId());
+            PointsGoods goods = exchange.getGoodsId() == null
+                    ? null : goodsMap.get(exchange.getGoodsId());
+            SysUser user = exchange.getUserId() == null
+                    ? null : userMap.get(exchange.getUserId());
             return toVO(exchange,
                     goods == null ? "商品已删除" : goods.getName(),
                     user == null ? "用户已删除" : user.getNickname());
