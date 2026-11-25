@@ -104,7 +104,15 @@ Page({
   },
 
   goCars() {
-    wx.showToast({ title: '车辆管理将在阶段 4 实现', icon: 'none' })
+    wx.navigateTo({ url: '/pages/car/list' })
+  },
+
+  goPointsRecord() {
+    wx.navigateTo({ url: '/pages/points/record' })
+  },
+
+  goExchangeList() {
+    wx.navigateTo({ url: '/pages/points/exchange-list' })
   },
 
   goFeedback() {

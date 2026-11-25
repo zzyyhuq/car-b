@@ -21,6 +21,15 @@
   font-weight: 700;
 }
 
+.mall-links {
+  display: flex;
+  justify-content: flex-end;
+  gap: 28rpx;
+  margin-top: 16rpx;
+  color: #1677ff;
+  font-size: 24rpx;
+}
+
 .goods-grid {
   display: flex;
   flex-wrap: wrap;

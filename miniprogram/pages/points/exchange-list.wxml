@@ -1,0 +1,19 @@
+<view class="page">
+  <view class="empty card" wx:if="{{!loading && !exchanges.length}}">
+    <text class="empty-icon">🎫</text>
+    <view>还没有兑换记录</view>
+  </view>
+
+  <view class="exchange-card card" wx:for="{{exchanges}}" wx:key="id">
+    <view class="exchange-top">
+      <text class="goods-name">{{item.goodsName}}</text>
+      <text class="status {{item.statusClass}}">{{item.statusText}}</text>
+    </view>
+    <view class="exchange-line">
+      消耗积分：<text class="cost">{{item.pointsCost}}</text>
+    </view>
+    <view class="exchange-line muted">兑换单号：{{item.exchangeNo}}</view>
+    <view class="exchange-line muted">兑换时间：{{item.exchangeTime}}</view>
+    <view class="exchange-line muted" wx:if="{{item.verifyTime}}">核销时间：{{item.verifyTime}}</view>
+  </view>
+</view>

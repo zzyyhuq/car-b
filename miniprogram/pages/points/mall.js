@@ -52,6 +52,14 @@ Page({
     })
   },
 
+  goRecord() {
+    wx.navigateTo({ url: '/pages/points/record' })
+  },
+
+  goExchanges() {
+    wx.navigateTo({ url: '/pages/points/exchange-list' })
+  },
+
   exchange(e) {
     const id = Number(e.currentTarget.dataset.id)
     const goods = this.data.goods.find(item => item.id === id)

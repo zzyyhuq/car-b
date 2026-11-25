@@ -1,0 +1,52 @@
+<view class="page">
+  <view class="card block">
+    <view class="form-item">
+      <text class="label">车牌号</text>
+      <input
+        class="input"
+        placeholder="例如：苏A12345"
+        maxlength="20"
+        value="{{form.plateNo}}"
+        data-field="plateNo"
+        bindinput="onInput"
+      />
+    </view>
+    <view class="form-item">
+      <text class="label">品牌</text>
+      <input
+        class="input"
+        placeholder="例如：比亚迪"
+        maxlength="50"
+        value="{{form.brand}}"
+        data-field="brand"
+        bindinput="onInput"
+      />
+    </view>
+    <view class="form-item">
+      <text class="label">型号</text>
+      <input
+        class="input"
+        placeholder="例如：汉"
+        maxlength="50"
+        value="{{form.model}}"
+        data-field="model"
+        bindinput="onInput"
+      />
+    </view>
+    <view class="form-item">
+      <text class="label">颜色</text>
+      <input
+        class="input"
+        placeholder="例如：白色"
+        maxlength="20"
+        value="{{form.color}}"
+        data-field="color"
+        bindinput="onInput"
+      />
+    </view>
+  </view>
+
+  <view class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="submit">
+    {{submitting ? '保存中...' : '保存'}}
+  </view>
+</view>

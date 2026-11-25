@@ -1,0 +1,18 @@
+<view class="page">
+  <view class="summary">
+    <view class="summary-label">当前积分</view>
+    <view class="summary-num">{{points}}</view>
+    <view class="summary-tip">订单完成后自动发放，可在积分商城兑换</view>
+  </view>
+
+  <view class="empty card" wx:if="{{!loading && !records.length}}">还没有积分记录</view>
+
+  <view class="record-card card" wx:for="{{records}}" wx:key="id">
+    <view class="record-main">
+      <view class="record-type">{{item.typeText}}</view>
+      <view class="record-remark">{{item.remark || '—'}}</view>
+      <view class="record-time">{{item.time}}</view>
+    </view>
+    <text class="record-amount {{item.positive ? 'plus' : 'minus'}}">{{item.amountText}}</text>
+  </view>
+</view>

@@ -1,0 +1,62 @@
+.summary {
+  padding: 36rpx 32rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(135deg, #ff9f1c, #ffc46b);
+  color: #ffffff;
+  box-shadow: 0 14rpx 32rpx rgba(255, 159, 28, 0.24);
+}
+
+.summary-label {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+.summary-num {
+  margin-top: 8rpx;
+  font-size: 56rpx;
+  font-weight: 700;
+}
+
+.summary-tip {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  opacity: 0.85;
+}
+
+.record-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  padding: 26rpx 28rpx;
+}
+
+.record-type {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+
+.record-remark {
+  color: #6b7688;
+  font-size: 24rpx;
+}
+
+.record-time {
+  margin-top: 6rpx;
+  color: #a3acbb;
+  font-size: 21rpx;
+}
+
+.record-amount {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.record-amount.plus {
+  color: #00a870;
+}
+
+.record-amount.minus {
+  color: #e34d59;
+}

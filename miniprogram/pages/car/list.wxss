@@ -1,0 +1,49 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx;
+}
+
+.head-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.add-btn {
+  padding: 12rpx 26rpx;
+  border-radius: 999rpx;
+  background: #eaf2ff;
+  color: #1677ff;
+  font-size: 25rpx;
+}
+
+.car-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  padding: 28rpx;
+}
+
+.car-plate {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  margin-bottom: 8rpx;
+}
+
+.car-actions {
+  display: flex;
+  gap: 24rpx;
+  font-size: 25rpx;
+}
+
+.edit {
+  color: #1677ff;
+}
+
+.delete {
+  color: #e34d59;
+}

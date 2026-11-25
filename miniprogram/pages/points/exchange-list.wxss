@@ -1,0 +1,47 @@
+.exchange-card {
+  margin-bottom: 20rpx;
+  padding: 28rpx;
+}
+
+.exchange-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.goods-name {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.status {
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 21rpx;
+}
+
+.status.pending {
+  background: #fff8e6;
+  color: #d48806;
+}
+
+.status.verified {
+  background: #eaf8ef;
+  color: #00a870;
+}
+
+.status.cancelled {
+  background: #f1f2f5;
+  color: #8a94a6;
+}
+
+.exchange-line {
+  font-size: 24rpx;
+  line-height: 1.8;
+}
+
+.cost {
+  color: #ff6b35;
+  font-weight: 600;
+}

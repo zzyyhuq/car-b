@@ -75,6 +75,14 @@
       <text>🎁 积分商城</text>
       <text class="arrow">›</text>
     </view>
+    <view class="menu-item" bindtap="goPointsRecord">
+      <text>📈 积分明细</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="goExchangeList">
+      <text>🎫 兑换记录</text>
+      <text class="arrow">›</text>
+    </view>
     <view class="menu-item" bindtap="goCars">
       <text>🚗 车辆管理</text>
       <text class="arrow">›</text>

@@ -8,6 +8,10 @@
     "pages/order/create",
     "pages/order/detail",
     "pages/points/mall",
+    "pages/points/record",
+    "pages/points/exchange-list",
+    "pages/car/list",
+    "pages/car/edit",
     "pages/message/list",
     "pages/message/feedback",
     "pages/mine/index"

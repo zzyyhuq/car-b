@@ -1,0 +1,41 @@
+.block {
+  padding: 8rpx 28rpx;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f3f5f8;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.label {
+  width: 140rpx;
+  flex-shrink: 0;
+  color: #4a5568;
+  font-size: 27rpx;
+}
+
+.input {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.submit-btn {
+  margin-top: 36rpx;
+  padding: 24rpx 0;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #1677ff, #3aa0ff);
+  color: #ffffff;
+  text-align: center;
+  font-size: 29rpx;
+  font-weight: 600;
+}
+
+.submit-btn.disabled {
+  opacity: 0.6;
+}

@@ -49,12 +49,32 @@ Page({
     })
   },
 
+  onShow() {
+    // 从车辆编辑页返回时刷新车辆列表
+    if (this.data.service) {
+      this.loadCars()
+    }
+  },
+
+  loadCars() {
+    return get('/api/car/my', {}, { silent: true }).catch(() => []).then(cars => {
+      const list = cars || []
+      const current = this.data.carId
+      const exists = list.some(item => item.id === current)
+      this.setData({
+        cars: list,
+        carId: exists ? current : (list.length ? list[0].id : null)
+      })
+      return list
+    })
+  },
+
   chooseCar(e) {
     this.setData({ carId: Number(e.currentTarget.dataset.id) })
   },
 
   addCar() {
-    wx.showToast({ title: '车辆管理将在阶段 4 实现', icon: 'none' })
+    wx.navigateTo({ url: '/pages/car/edit' })
   },
 
   onDateChange(e) {
