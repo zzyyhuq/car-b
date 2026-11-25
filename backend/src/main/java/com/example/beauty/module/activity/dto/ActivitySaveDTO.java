@@ -24,4 +24,7 @@ public class ActivitySaveDTO {
 
     /** 1 进行中，0 已下线；新增不传默认进行中 */
     private Integer status;
+
+    /** 1 需要报名，0 仅公告；新增不传默认仅公告 */
+    private Integer needSignup;
 }

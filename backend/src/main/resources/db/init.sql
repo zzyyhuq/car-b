@@ -191,6 +191,7 @@ CREATE TABLE IF NOT EXISTS activity (
     start_time  DATETIME     NULL,
     end_time    DATETIME     NULL,
     status      TINYINT      NOT NULL DEFAULT 1 COMMENT '1进行中 0已下线',
+    need_signup TINYINT      NOT NULL DEFAULT 0 COMMENT '1需要报名 0仅公告',
     create_time DATETIME     NULL,
     update_time DATETIME     NULL,
     PRIMARY KEY (id),

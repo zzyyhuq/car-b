@@ -66,6 +66,7 @@ public class DataInitializer implements ApplicationRunner {
         initDemoCar();
         initDemoNotices();
         initDemoActivities();
+        initDemoSignupActivity();
         initDemoPointsGoods();
         initDemoPoints();
     }
@@ -126,6 +127,21 @@ public class DataInitializer implements ApplicationRunner {
         activityMapper.insert(activity("积分翻倍月", "本月订单积分 x2",
                 now.minusDays(5), now.plusDays(25)));
         log.info("已初始化 2 个演示活动");
+    }
+
+    /** 演示「需要报名」的活动；促销类活动保持 needSignup=0，仅公告 */
+    private void initDemoSignupActivity() {
+        Long exists = activityMapper.selectCount(new LambdaQueryWrapper<Activity>()
+                .eq(Activity::getNeedSignup, 1));
+        if (exists > 0) {
+            return;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        Activity activity = activity("免费内饰体验课", "限量 10 个名额，报名后到店参加",
+                now.minusDays(1), now.plusDays(20));
+        activity.setNeedSignup(1);
+        activityMapper.insert(activity);
+        log.info("已初始化 1 个需要报名的演示活动");
     }
 
     private Activity activity(String title, String content,

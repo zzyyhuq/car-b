@@ -29,3 +29,41 @@
   white-space: pre-wrap;
   word-break: break-all;
 }
+
+.signup-card {
+  margin-top: 24rpx;
+  padding: 28rpx;
+}
+
+.signup-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.signup-tip {
+  color: #6b7688;
+  font-size: 24rpx;
+  line-height: 1.7;
+}
+
+.signup-btn {
+  margin-top: 22rpx;
+  padding: 22rpx 0;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #1677ff, #3aa0ff);
+  color: #ffffff;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.signup-btn.cancel {
+  background: #fff5f5;
+  border: 2rpx solid #f0c4c8;
+  color: #e34d59;
+}
+
+.signup-btn.disabled {
+  opacity: 0.6;
+}

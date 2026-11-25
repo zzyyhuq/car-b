@@ -13,6 +13,24 @@
     </view>
     <view class="content">{{activity.content}}</view>
   </view>
+
+  <view class="signup-card card" wx:if="{{activity.needSignup === 1 && activity.status === 1}}">
+    <view class="signup-title">活动报名</view>
+    <view class="signup-tip" wx:if="{{signup && signup.status === 1}}">
+      你已报名，活动开始前请按时到店
+    </view>
+    <view class="signup-tip" wx:else>名额有限，报名后到店参加</view>
+    <view
+      class="signup-btn {{signing ? 'disabled' : ''}}"
+      wx:if="{{!(signup && signup.status === 1)}}"
+      bindtap="signupActivity"
+    >{{signing ? '提交中...' : '立即报名'}}</view>
+    <view
+      class="signup-btn cancel {{signing ? 'disabled' : ''}}"
+      wx:else
+      bindtap="cancelSignup"
+    >{{signing ? '处理中...' : '取消报名'}}</view>
+  </view>
 </view>
 
 <view class="empty" wx:elif="{{loading}}">加载中...</view>

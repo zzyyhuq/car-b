@@ -34,6 +34,9 @@ public class Activity {
     /** 1 进行中，0 已下线 */
     private Integer status;
 
+    /** 1 需要报名，0 仅公告；促销类活动保持 0，不强制报名 */
+    private Integer needSignup;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 

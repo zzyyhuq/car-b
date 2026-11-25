@@ -19,3 +19,7 @@ export function updateActivityStatus(id, status) {
 export function deleteActivity(id) {
   return http.delete('/activity/' + id)
 }
+
+export function listSignups(id) {
+  return http.get('/activity/' + id + '/signups')
+}

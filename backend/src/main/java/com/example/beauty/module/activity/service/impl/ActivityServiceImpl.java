@@ -76,6 +76,9 @@ public class ActivityServiceImpl implements ActivityService {
         if (activity.getStatus() == null) {
             activity.setStatus(1);
         }
+        if (activity.getNeedSignup() == null) {
+            activity.setNeedSignup(0);
+        }
         activityMapper.insert(activity);
         log.info("新增活动 activityId={} title={} status={}",
                 activity.getId(), activity.getTitle(), activity.getStatus());

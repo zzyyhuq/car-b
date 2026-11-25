@@ -25,6 +25,13 @@
           <div class="muted">至 {{ formatDateTime(row.endTime) }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="报名" width="90" align="center">
+        <template #default="{ row }">
+          <el-tag :type="row.needSignup === 1 ? 'warning' : 'info'" effect="plain">
+            {{ row.needSignup === 1 ? '需报名' : '仅公告' }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" width="95" align="center">
         <template #default="{ row }">
           <el-tag :type="row.status === 1 ? 'success' : 'info'" effect="light">
@@ -32,9 +39,15 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="180" fixed="right">
+      <el-table-column label="操作" width="220" fixed="right">
         <template #default="{ row }">
           <el-button link type="primary" @click="openEdit(row)">编辑</el-button>
+          <el-button
+            v-if="row.needSignup === 1"
+            link
+            type="primary"
+            @click="openSignups(row)"
+          >名单</el-button>
           <el-button
             link
             :type="row.status === 1 ? 'warning' : 'success'"
@@ -98,6 +111,12 @@
         <el-form-item label="封面地址">
           <el-input v-model="form.cover" maxlength="255" placeholder="图片地址，可选" />
         </el-form-item>
+        <el-form-item label="报名">
+          <el-radio-group v-model="form.needSignup">
+            <el-radio :value="0">仅公告</el-radio>
+            <el-radio :value="1">需要报名</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio :value="1">上线</el-radio>
@@ -110,6 +129,40 @@
         <el-button type="primary" :loading="saving" @click="submitForm">保存</el-button>
       </template>
     </el-dialog>
+
+    <el-dialog v-model="signupVisible" title="报名名单" width="620px">
+      <div class="muted" style="margin-bottom: 12px">
+        活动 {{ signupRow && signupRow.title }}
+      </div>
+      <el-table
+        v-loading="signupLoading"
+        :data="signups"
+        border
+        stripe
+        size="small"
+        empty-text="还没有车主报名"
+      >
+        <el-table-column label="车主" min-width="120">
+          <template #default="{ row }">{{ row.userName || '—' }}</template>
+        </el-table-column>
+        <el-table-column label="手机号" width="130">
+          <template #default="{ row }">{{ row.phone || '—' }}</template>
+        </el-table-column>
+        <el-table-column label="报名时间" width="160">
+          <template #default="{ row }">{{ formatDateTime(row.signupTime) }}</template>
+        </el-table-column>
+        <el-table-column label="状态" width="90" align="center">
+          <template #default="{ row }">
+            <el-tag :type="row.status === 1 ? 'success' : 'info'" effect="light">
+              {{ row.statusText }}
+            </el-tag>
+          </template>
+        </el-table-column>
+      </el-table>
+      <template #footer>
+        <el-button @click="signupVisible = false">关闭</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -120,6 +173,7 @@ import { Plus } from '@element-plus/icons-vue'
 import {
   createActivity,
   deleteActivity,
+  listSignups,
   pageActivities,
   updateActivity,
   updateActivityStatus
@@ -136,6 +190,11 @@ const formRef = ref()
 const saving = ref(false)
 const editingId = ref(null)
 const form = reactive(defaultForm())
+
+const signupVisible = ref(false)
+const signupRow = ref(null)
+const signups = ref([])
+const signupLoading = ref(false)
 
 const rules = {
   title: [{ required: true, message: '请输入活动标题', trigger: 'blur' }]
@@ -157,6 +216,7 @@ function defaultForm() {
     cover: '',
     startTime: toIso(new Date()),
     endTime: toIso(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
+    needSignup: 0,
     status: 1
   }
 }
@@ -200,9 +260,24 @@ function openEdit(row) {
     cover: row.cover || '',
     startTime: row.startTime || '',
     endTime: row.endTime || '',
+    needSignup: row.needSignup == null ? 0 : row.needSignup,
     status: row.status == null ? 1 : row.status
   })
   formVisible.value = true
+}
+
+async function openSignups(row) {
+  signupRow.value = row
+  signups.value = []
+  signupVisible.value = true
+  signupLoading.value = true
+  try {
+    signups.value = (await listSignups(row.id)) || []
+  } catch (e) {
+    signups.value = []
+  } finally {
+    signupLoading.value = false
+  }
 }
 
 function resetForm() {
