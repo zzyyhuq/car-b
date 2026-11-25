@@ -82,6 +82,7 @@ JSON 文档地址：<http://localhost:8081/v3/api-docs>。
 | PUT | `/api/activity/{id}/signup/cancel` | OWNER | 取消报名 |
 | GET | `/api/activity/{id}/signup/my` | OWNER | 我的报名状态 |
 | GET | `/api/activity/{id}/signups` | ADMIN | 报名名单 |
+| GET | `/api/stats/overview` | ADMIN | 管理端首页统计（用户/订单/营收/待办） |
 | POST | `/api/order` | OWNER | 车主预约下单 |
 | POST | `/api/order/admin-create` | ADMIN/STAFF | 到店开单（替车主建单） |
 | GET | `/api/order/my` | OWNER | 我的订单（可按 status 筛选） |

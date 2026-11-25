@@ -11,8 +11,14 @@ const routes = [
   {
     path: '/',
     component: () => import('../layout/AdminLayout.vue'),
-    redirect: '/orders',
+    redirect: '/dashboard',
     children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('../views/DashboardView.vue'),
+        meta: { title: '数据概览', roles: ['ADMIN'] }
+      },
       {
         path: 'orders',
         name: 'orders',

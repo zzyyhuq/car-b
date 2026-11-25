@@ -75,7 +75,8 @@ async function submit() {
     }
     auth.setSession(data)
     ElMessage.success('欢迎回来，' + (data.nickname || data.username))
-    router.replace(route.query.redirect || '/orders')
+    const fallback = data.role === 'ADMIN' ? '/dashboard' : '/orders'
+    router.replace(route.query.redirect || fallback)
   } catch (e) {
     // http.js 已经提示错误
   } finally {

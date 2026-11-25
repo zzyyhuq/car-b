@@ -17,6 +17,10 @@
         text-color="#a9b7c9"
         active-text-color="#ffffff"
       >
+        <el-menu-item v-if="auth.isAdmin" index="/dashboard">
+          <el-icon><DataBoard /></el-icon>
+          <span>数据概览</span>
+        </el-menu-item>
         <el-menu-item index="/orders">
           <el-icon><Document /></el-icon>
           <span>订单管理</span>
@@ -88,7 +92,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowDown, Bell, Calendar, ChatDotRound, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
+import { ArrowDown, Bell, Calendar, ChatDotRound, DataBoard, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
 import { useAuthStore } from '../stores/auth'
 import { ROLE_TEXT } from '../utils/format'
 
