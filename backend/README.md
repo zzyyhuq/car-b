@@ -177,7 +177,25 @@ Authorization: Bearer <token>
 
 - 数据库账号密码在 `src/main/resources/application.yml`，可用环境变量 `DB_USERNAME` / `DB_PASSWORD` 覆盖。
 - JWT 密钥 `jwt.secret` 至少 32 字节，上线前必须换。
-- 微信登录的 `wx.appid` / `wx.secret` 在阶段 3 填，也可以用环境变量 `WX_APPID` / `WX_SECRET`。
+### 微信登录配置
+
+1. 小程序 AppID 在 `miniprogram/project.config.json`；AppSecret 在微信公众平台「开发管理 → 开发设置」生成。
+2. 在 `backend/src/main/resources/application-local.yml`（已被 git 忽略）中填写：
+
+   ```yaml
+   wx:
+     appid: wxd3519a64581e566c
+     secret: 你的AppSecret
+   ```
+
+   或使用环境变量 `WX_APPID` / `WX_SECRET`。
+3. 重启后端，`POST /api/auth/wx-login` 用 `wx.login` 的 code 换 openid。
+4. 小程序 `miniprogram/config.js`：
+   - `USE_WX_LOGIN = true`：使用微信登录
+   - `WX_LOGIN_FALLBACK = true`：微信登录失败时回退演示账号（开发期建议 true，正式演示建议 false）
+5. 开发者工具「清缓存 → 清除数据缓存」后重新编译。首次微信登录会自动在 `sys_user` 建一个 `OWNER` 账号，昵称「微信用户」。
+
+> 微信登录创建的账号和演示账号 `owner001` 数据不互通，切换登录方式时小程序会自动清掉旧 token。
 - Redis 已引入依赖和配置，阶段 4 做登录态/缓存时启用，现在不启动 Redis 也不影响运行。
 
 ## 六、日志

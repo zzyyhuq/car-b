@@ -1,10 +1,14 @@
-const { BASE_URL } = require('./config')
+const { BASE_URL, USE_WX_LOGIN, WX_LOGIN_FALLBACK } = require('./config')
 const { TOKEN_KEY, USER_KEY } = require('./utils/request')
 
+const LOGIN_MODE_KEY = 'beauty_login_mode'
+const LOGIN_MODE = USE_WX_LOGIN ? 'wx' : 'demo'
+
 /**
- * 阶段 3：小程序开始接后端。
- * 登录暂时用演示车主账号（owner001 / owner123），等配置好小程序 AppSecret 后，
- * 把 login() 换成 wx.login → POST /api/auth/wx-login 即可，页面不用改。
+ * 登录策略：
+ * - 正式：wx.login → POST /api/auth/wx-login，后端用 code 换 openid
+ * - 开发：没有 AppSecret 时用演示车主 owner001
+ * - USE_WX_LOGIN / WX_LOGIN_FALLBACK 在 config.js 中切换
  */
 App({
   globalData: {
@@ -16,6 +20,13 @@ App({
   loginPromise: null,
 
   onLaunch() {
+    // 切换登录方式后清掉旧 token，避免继续用上一个账号
+    const savedMode = wx.getStorageSync(LOGIN_MODE_KEY)
+    if (savedMode && savedMode !== LOGIN_MODE) {
+      this.clearSession()
+    }
+    wx.setStorageSync(LOGIN_MODE_KEY, LOGIN_MODE)
+
     if (!wx.getStorageSync('beauty_orders')) {
       wx.setStorageSync('beauty_orders', [])
     }
@@ -36,33 +47,80 @@ App({
     if (this.loginPromise) {
       return this.loginPromise
     }
-    this.loginPromise = new Promise((resolve, reject) => {
+
+    const request = USE_WX_LOGIN
+      ? this.wxLogin().catch(err => {
+          if (!WX_LOGIN_FALLBACK) {
+            wx.showToast({ title: err.message || '微信登录失败', icon: 'none' })
+            throw err
+          }
+          console.warn('微信登录失败，回退演示账号：', err.message)
+          wx.showToast({ title: '微信登录未配置，已使用演示账号', icon: 'none' })
+          return this.demoLogin()
+        })
+      : this.demoLogin()
+
+    this.loginPromise = request.then(data => {
+      this.setSession(data)
+      return data.token
+    })
+
+    // 不管成功失败都释放，下一次可以重新登录
+    this.loginPromise.then(
+      () => { this.loginPromise = null },
+      () => { this.loginPromise = null }
+    )
+    return this.loginPromise
+  },
+
+  /** wx.login 拿 code，再交给后端换 openid */
+  wxLogin() {
+    return new Promise((resolve, reject) => {
+      wx.login({
+        success: res => {
+          if (!res.code) {
+            reject(new Error('微信登录失败：未获取到 code'))
+            return
+          }
+          this.requestLogin('/api/auth/wx-login', { code: res.code })
+            .then(resolve)
+            .catch(reject)
+        },
+        fail: () => reject(new Error('微信登录失败，请重试'))
+      })
+    })
+  },
+
+  /** 开发期演示账号 */
+  demoLogin() {
+    return this.requestLogin('/api/auth/login', {
+      username: 'owner001',
+      password: 'owner123'
+    }).catch(err => {
+      wx.showToast({ title: err.message || '登录失败', icon: 'none' })
+      throw err
+    })
+  },
+
+  /** 统一登录请求，成功返回 LoginVO */
+  requestLogin(url, data) {
+    return new Promise((resolve, reject) => {
       wx.request({
-        url: BASE_URL + '/api/auth/login',
+        url: BASE_URL + url,
         method: 'POST',
-        data: { username: 'owner001', password: 'owner123' },
+        data,
         header: { 'Content-Type': 'application/json' },
         success: res => {
           const body = res.data || {}
           if (res.statusCode === 200 && body.code === 200 && body.data && body.data.token) {
-            this.setSession(body.data)
-            resolve(body.data.token)
+            resolve(body.data)
             return
           }
-          const message = body.message || '登录失败'
-          wx.showToast({ title: message, icon: 'none' })
-          reject(new Error(message))
+          reject(new Error(body.message || '登录失败'))
         },
-        fail: () => {
-          wx.showToast({ title: '无法连接后端，请检查地址和防火墙', icon: 'none' })
-          reject(new Error('无法连接后端'))
-        },
-        complete: () => {
-          this.loginPromise = null
-        }
+        fail: () => reject(new Error('无法连接后端，请检查地址和防火墙'))
       })
     })
-    return this.loginPromise
   },
 
   setSession(data) {

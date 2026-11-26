@@ -3,6 +3,9 @@ server:
   port: 8081
 
 spring:
+  # 默认加载 application-local.yml（本地私有配置，已被 Git 忽略）
+  profiles:
+    active: local
   application:
     name: car-beauty-backend
   datasource:
@@ -47,6 +50,7 @@ jwt:
   expire-days: 7
 
 wx:
-  # 阶段3接微信登录时填，也可以走环境变量
+  # 微信登录：AppID 在 miniprogram/project.config.json，AppSecret 在微信公众平台生成
+  # 推荐写到 application-local.yml（已被 git 忽略）或环境变量，不要提交到仓库
   appid: ${WX_APPID:}
   secret: ${WX_SECRET:}
