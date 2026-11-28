@@ -18,6 +18,9 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
+      # Redis 没启动时快速失败再降级查库，不让请求卡在 10 秒的默认连接超时上
+      connect-timeout: 500ms
+      timeout: 800ms
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai

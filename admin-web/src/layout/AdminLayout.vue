@@ -53,6 +53,10 @@
           <el-icon><User /></el-icon>
           <span>用户管理</span>
         </el-menu-item>
+        <el-menu-item v-if="auth.isAdmin" index="/system/cache">
+          <el-icon><Coin /></el-icon>
+          <span>缓存管理</span>
+        </el-menu-item>
       </el-menu>
 
       <div class="aside-foot">v0.1 · 毕业设计演示</div>
@@ -92,7 +96,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowDown, Bell, Calendar, ChatDotRound, DataBoard, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
+import { ArrowDown, Bell, Calendar, ChatDotRound, Coin, DataBoard, Document, Goods, PriceTag, SwitchButton, Tickets, User } from '@element-plus/icons-vue'
 import { useAuthStore } from '../stores/auth'
 import { ROLE_TEXT } from '../utils/format'
 

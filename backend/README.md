@@ -196,7 +196,28 @@ Authorization: Bearer <token>
 5. 开发者工具「清缓存 → 清除数据缓存」后重新编译。首次微信登录会自动在 `sys_user` 建一个 `OWNER` 账号，昵称「微信用户」。
 
 > 微信登录创建的账号和演示账号 `owner001` 数据不互通，切换登录方式时小程序会自动清掉旧 token。
-- Redis 已引入依赖和配置，阶段 4 做登录态/缓存时启用，现在不启动 Redis 也不影响运行。
+
+### Redis 缓存
+
+- 缓存内容：车主端「上架服务项目」「已发布公告」「进行中活动」列表；服务项目 30 分钟、公告/活动 5 分钟过期。
+- 管理端新增/修改/上下架/删除后会主动删除对应缓存，不需要等 TTL。
+- Redis 未启动时自动降级为直接查库，接口不报错；连接失败后 30 秒内不再重试，避免请求卡在连接超时上。
+- 本地启动（Docker）：
+
+  ```bash
+  docker run -d --name beauty-redis -p 6379:6379 --restart unless-stopped redis:7-alpine
+  ```
+
+- 连接参数在 `application.yml` 的 `spring.data.redis`，可用 `REDIS_HOST` / `REDIS_PORT` / `REDIS_PASSWORD` 覆盖。
+
+管理端「缓存管理」页（仅管理员）：
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/api/cache/overview` | 连接状态、Redis 版本、内存、key 数量、命中率 |
+| GET | `/api/cache/keys?prefix=&limit=` | 按前缀查询业务缓存 key（默认 100，最大 500） |
+| DELETE | `/api/cache/keys?key=` | 删除单个缓存，只允许 `beauty:` 前缀 |
+| DELETE | `/api/cache/business` | 清空所有业务缓存，返回删除数量 |
 
 ## 六、日志
 

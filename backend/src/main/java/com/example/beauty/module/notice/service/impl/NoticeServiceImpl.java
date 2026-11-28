@@ -3,9 +3,12 @@ package com.example.beauty.module.notice.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.beauty.common.PageResult;
+import com.example.beauty.common.cache.CacheKeys;
+import com.example.beauty.common.cache.CacheService;
 import com.example.beauty.common.constant.Role;
 import com.example.beauty.common.exception.BusinessException;
 import com.example.beauty.common.security.UserContext;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.example.beauty.module.notice.dto.NoticeQuery;
 import com.example.beauty.module.notice.dto.NoticeSaveDTO;
 import com.example.beauty.module.notice.entity.Notice;
@@ -27,20 +30,29 @@ public class NoticeServiceImpl implements NoticeService {
     private static final int MAX_LIMIT = 20;
 
     private final NoticeMapper noticeMapper;
+    private final CacheService cacheService;
 
-    public NoticeServiceImpl(NoticeMapper noticeMapper) {
+    public NoticeServiceImpl(NoticeMapper noticeMapper, CacheService cacheService) {
         this.noticeMapper = noticeMapper;
+        this.cacheService = cacheService;
     }
 
     @Override
     public List<Notice> listPublished(Integer limit) {
         int size = limit == null || limit <= 0 ? DEFAULT_LIMIT : Math.min(limit, MAX_LIMIT);
-        Page<Notice> page = new Page<>(1, size, false);
-        return noticeMapper.selectPage(page, new LambdaQueryWrapper<Notice>()
-                        .eq(Notice::getStatus, 1)
-                        .orderByDesc(Notice::getPublishTime)
-                        .orderByDesc(Notice::getId))
-                .getRecords();
+        // 公告可能随时发布/下线，缓存 5 分钟；管理端写操作后立即失效
+        return cacheService.get(CacheKeys.noticeList(size),
+                new TypeReference<List<Notice>>() {
+                },
+                CacheKeys.NOTICE_TTL,
+                () -> {
+                    Page<Notice> page = new Page<>(1, size, false);
+                    return noticeMapper.selectPage(page, new LambdaQueryWrapper<Notice>()
+                                    .eq(Notice::getStatus, 1)
+                                    .orderByDesc(Notice::getPublishTime)
+                                    .orderByDesc(Notice::getId))
+                            .getRecords();
+                });
     }
 
     @Override
@@ -79,6 +91,7 @@ public class NoticeServiceImpl implements NoticeService {
             notice.setPublishTime(LocalDateTime.now().withNano(0));
         }
         noticeMapper.insert(notice);
+        cacheService.evictByPrefix(CacheKeys.NOTICE_LIST);
         log.info("新增公告 noticeId={} title={} status={}",
                 notice.getId(), notice.getTitle(), notice.getStatus());
         return notice.getId();
@@ -94,6 +107,7 @@ public class NoticeServiceImpl implements NoticeService {
             update.setPublishTime(LocalDateTime.now().withNano(0));
         }
         noticeMapper.updateById(update);
+        cacheService.evictByPrefix(CacheKeys.NOTICE_LIST);
     }
 
     @Override
@@ -109,6 +123,7 @@ public class NoticeServiceImpl implements NoticeService {
             update.setPublishTime(LocalDateTime.now().withNano(0));
         }
         noticeMapper.updateById(update);
+        cacheService.evictByPrefix(CacheKeys.NOTICE_LIST);
         log.info("公告状态变更 noticeId={} status={} operator={}", id, status, UserContext.getId());
     }
 
@@ -116,6 +131,7 @@ public class NoticeServiceImpl implements NoticeService {
     public void delete(Long id) {
         getById(id);
         noticeMapper.deleteById(id);
+        cacheService.evictByPrefix(CacheKeys.NOTICE_LIST);
         log.info("删除公告 noticeId={} operator={}", id, UserContext.getId());
     }
 }

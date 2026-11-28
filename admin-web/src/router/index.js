@@ -66,6 +66,12 @@ const routes = [
         name: 'users',
         component: () => import('../views/UserView.vue'),
         meta: { title: '用户管理', roles: ['ADMIN'] }
+      },
+      {
+        path: 'system/cache',
+        name: 'system-cache',
+        component: () => import('../views/CacheView.vue'),
+        meta: { title: '缓存管理', roles: ['ADMIN'] }
       }
     ]
   },
